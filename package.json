@@ -9,6 +9,9 @@
     "serve": "vue-cli-service serve",
     "lint": "vue-cli-service lint"
   },
+  "files": [
+    "dist"
+  ],
   "keywords": [
     "canvas"
   ],
