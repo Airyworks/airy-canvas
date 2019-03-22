@@ -6,5 +6,6 @@ module.exports = {
     config
       .entry('app')
       .add('./src/example.js')
-  }
+  },
+  css: { extract: false }
 }
