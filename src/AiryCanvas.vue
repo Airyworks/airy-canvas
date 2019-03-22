@@ -8,7 +8,6 @@
 <script>
 import ToolsBar from '@/components/ToolsBar'
 
-import Context from '@/model/Context'
 import Recorder from '@/model/Recorder'
 import Pen from '@/model/brush/Pen'
 
@@ -29,7 +28,6 @@ export default {
       canvas: null,
       ctx: null,
       recorder: null,
-      airyCtx: new Context(),
       needSolidify: false
     }
   },
@@ -46,16 +44,19 @@ export default {
     const ctx = canvas.getContext('2d')
     const recorder = new Recorder(canvas)
     const defaultTool = new Pen(recorder)
-    this.airyCtx.setActiveTool(defaultTool)
+
+    this.$airyCtx.activeTool = defaultTool
+    this.$airyCtx.recorder = recorder
+
     this.canvas = canvas
     this.ctx = ctx
     this.recorder = recorder
     this.bindEvent()
+    this.setDefaultPen()
+    this.$refs.toolsBar.bind(this.$airyCtx)
     requestAnimationFrame(() => {
       this.render()
     })
-    this.setDefaultPen()
-    this.$refs.toolsBar.bind(this.airyCtx)
   },
   methods: {
     bindEvent () {
@@ -64,27 +65,22 @@ export default {
         e.preventDefault()
       })
       canvas.addEventListener('mousedown', e => {
-        if (e.button === 2) {
-          // return this.revoke()
-          this.recorder.revoke()
-          this.recorder.needUpdate = true
-          return
-        } else if (e.button !== 0) {
+        if (e.button !== 0) {
           return
         }
         const x = e.offsetX
         const y = e.offsetY
-        this.airyCtx.activeTool.beginAtPos(x, y)
+        this.$airyCtx.activeTool.beginAtPos(x, y)
       })
       canvas.addEventListener('mousemove', e => {
         const x = e.offsetX
         const y = e.offsetY
-        this.airyCtx.activeTool.moveAtPos(x, y)
+        this.$airyCtx.activeTool.moveAtPos(x, y)
       })
       const userInputInterrupt = e => {
         const x = e.offsetX
         const y = e.offsetY
-        const end = this.airyCtx.activeTool.endAtPos(x, y)
+        const end = this.$airyCtx.activeTool.endAtPos(x, y)
         if (end) {
           this.needSolidify = true
         }
@@ -100,16 +96,16 @@ export default {
       if (e.button) {
         return
       }
-      this.canvas.style.cursor = this.airyCtx.getCursor(true)
+      this.canvas.style.cursor = this.$airyCtx.getCursor(true)
     },
     setDefaultPen () {
-      this.canvas.style.cursor = this.airyCtx.getCursor()
+      this.canvas.style.cursor = this.$airyCtx.getCursor()
     },
     render (time) {
       const ctx = this.ctx
-      if (this.airyCtx.activeTool.needUpdate) {
+      if (this.$airyCtx.activeTool.needUpdate) {
         // const activeCtx = this.recorder.getActiveLayer()
-        this.airyCtx.activeTool.updateWithActiveLayer(this.recorder.activeLayer)
+        this.$airyCtx.activeTool.updateWithActiveLayer(this.recorder.activeLayer)
         this.recorder.needUpdate = true
       }
       if (this.needSolidify) {

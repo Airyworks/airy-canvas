@@ -5,6 +5,10 @@
       :class="{ 'item-focus': activeTool === item.name }">
       {{item.name}}
     </div>
+    <div class="blank"></div>
+    <div @click="revoke" class="item button">Revoke</div>
+    <div @click="clear" class="item button">Clear</div>
+    <div @click="save" class="item button">Save</div>
   </div>
 </template>
 
@@ -35,6 +39,17 @@ export default {
     },
     selectTool (tool) {
       this.activeTool = tool.name
+    },
+    revoke () {
+      this.$airyCtx.recorder.revoke()
+    },
+    clear () {
+      this.$airyCtx.recorder.clear()
+    },
+    save () {
+      const data = this.$airyCtx.recorder.tree.toString()
+      const size = (data.length / 1024).toFixed(2) + 'KB'
+      console.log(size)
     }
   }
 }
@@ -43,6 +58,7 @@ export default {
 <style lang="stylus">
 #airy-toolsbar
   position absolute
+  width calc(100% - 12px)
   left 2px
   bottom 2px
   border-radius 4px
@@ -52,7 +68,7 @@ export default {
   display flex
   .item
     height 30px
-    width 40px
+    width 60px
     font-size 12px
     margin 2px
     padding 4px 8px
@@ -63,7 +79,14 @@ export default {
     align-items center
     cursor pointer
     user-select none
+    border solid 1px #494949
   .item-focus
     background-color #313131
-    border solid 1px #5b5b5b
+    border-color #5b5b5b
+  .blank
+    flex 1 1 100%
+  .button
+    transition text-shadow .2s
+    &:hover
+      text-shadow 0 0 4px #fff
 </style>

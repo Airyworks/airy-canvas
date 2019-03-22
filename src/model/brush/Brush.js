@@ -9,16 +9,21 @@ export default class Brush {
     this.cursorActive = null
   }
 
+  get paletteConfig () {
+    console.warn(`Brush<${this.name}> The attribute 'paletteConfig' needs to be overloaded`)
+    return []
+  }
+
   stringify () {
-    console.warn(`Brush<${this.name}> Need to implement the stringify method`)
+    console.warn(`Brush<${this.name}> The function 'stringify' needs to be overloaded`)
   }
   beginAtPos (x, y) {
-    console.warn(`Brush<${this.name}> Need to implement the beginAtPos method`)
+    console.warn(`Brush<${this.name}> The function 'beginAtPos' needs to be overloaded`)
   }
   moveAtPos (x, y) {
-    console.warn(`Brush<${this.name}> Need to implement the moveAtPos method`)
+    console.warn(`Brush<${this.name}> The function 'moveAtPos' needs to be overloaded`)
   }
   endAtPos (x, y) {
-    console.warn(`Brush<${this.name}> Need to implement the endAtPos method`)
+    console.warn(`Brush<${this.name}> The function 'endAtPos' needs to be overloaded`)
   }
 }

@@ -56,6 +56,15 @@ export default class Recorder {
     this.activeLayer = new Layer(this.activeIndex)
   }
 
+  clear () {
+    this.activeIndex = 0
+    this.history = []
+    this.tree = []
+    this.furthestImgData = null
+    this.nearestImgData = null
+    this.needUpdate = true
+  }
+
   solidify () {
     this.tree.push(this.activeLayer.data)
     this.history.push(this.activeLayer)
@@ -82,6 +91,7 @@ export default class Recorder {
     })
     this.nearestImgData = ctx.getImageData(0, 0, this.width, this.height)
     this.activeLayer = new Layer(this.activeLayer.id)
+    this.needUpdate = true
   }
 
   render (ctx) {

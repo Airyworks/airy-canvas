@@ -2,19 +2,31 @@
 
 export default class Context {
   constructor () {
-    this.activeTool = null
+    this._recorder = null
+    this._activeTool = null
     this.cursor = null
     this.cursorActive = null
   }
+  set recorder (recorder) {
+    if (!this._recorder) {
+      this._recorder = recorder
+    }
+  }
+  get recorder () {
+    return this._recorder
+  }
 
-  setActiveTool (tool) {
-    this.activeTool = tool
+  set activeTool (tool) {
+    this._activeTool = tool
     if (tool.cursor) {
       this.cursor = tool.cursor
     }
     if (tool.cursorActive) {
       this.cursorActive = tool.cursorActive
     }
+  }
+  get activeTool () {
+    return this._activeTool
   }
 
   getCursor (isActive) {
