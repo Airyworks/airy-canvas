@@ -198,10 +198,7 @@ export default class Pen extends Brush {
     }
     this._active = false
     this.path = simplify(this.path)
-    // console.log(this.stringify())
     this.ctrlPoints = genControlPoints(this.path)
-    // console.log(this.path)
-    // console.log(this.ctrlPoints)
     this.needUpdate = true
     return true
   }

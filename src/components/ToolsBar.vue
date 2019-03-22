@@ -13,6 +13,8 @@
 </template>
 
 <script>
+import * as BrushLib from '@/model/brush'
+
 const tools = [
   {
     type: 'Brush',
@@ -39,6 +41,9 @@ export default {
     },
     selectTool (tool) {
       this.activeTool = tool.name
+      if (tool.type === 'Brush') {
+        this.$airyCtx.activeTool = new BrushLib[tool.name](this.$airyCtx.recorder)
+      }
     },
     revoke () {
       this.$airyCtx.recorder.revoke()

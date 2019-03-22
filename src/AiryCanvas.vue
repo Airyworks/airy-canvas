@@ -9,7 +9,7 @@
 import ToolsBar from '@/components/ToolsBar'
 
 import Recorder from '@/model/Recorder'
-import Pen from '@/model/brush/Pen'
+import { Pen } from '@/model/brush'
 
 export default {
   name: 'airyCanvas',
@@ -47,6 +47,7 @@ export default {
 
     this.$airyCtx.activeTool = defaultTool
     this.$airyCtx.recorder = recorder
+    this.$airyCtx.on('changetool', this.setDefaultPen)
 
     this.canvas = canvas
     this.ctx = ctx
@@ -80,10 +81,7 @@ export default {
       const userInputInterrupt = e => {
         const x = e.offsetX
         const y = e.offsetY
-        const end = this.$airyCtx.activeTool.endAtPos(x, y)
-        if (end) {
-          this.needSolidify = true
-        }
+        this.needSolidify = this.$airyCtx.activeTool.endAtPos(x, y)
       }
       canvas.addEventListener('mouseup', userInputInterrupt)
       canvas.addEventListener('mouseleave', userInputInterrupt)
@@ -104,7 +102,6 @@ export default {
     render (time) {
       const ctx = this.ctx
       if (this.$airyCtx.activeTool.needUpdate) {
-        // const activeCtx = this.recorder.getActiveLayer()
         this.$airyCtx.activeTool.updateWithActiveLayer(this.recorder.activeLayer)
         this.recorder.needUpdate = true
       }
