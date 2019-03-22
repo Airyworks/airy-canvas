@@ -1,34 +1,11 @@
 'use strict'
 
-// const simplify = points => {
-//   let left = points[0]
-//   let right
-//   const last = points.length - 1
-//   const simplifyed = [points[0]]
-//   for (let i = 1; i < last; i++) {
-//     right = points[i + 1]
-//     const p = points[i]
-//     if (p.x === right.x && p.y === right.y) {
-//       continue
-//     }
-//     if (p.x === left.x && p.y === left.y) {
-//       continue
-//     }
-//     const d1 = Math.sqrt(Math.pow(left.x - p.x, 2) + Math.pow(left.y - p.y, 2))
-//     const d2 = Math.sqrt(Math.pow(right.x - p.x, 2) + Math.pow(right.y - p.y, 2))
-//     const cosTheta = ((left.x - p.x) * (right.x - p.x) + (left.y - p.y) * (right.y - p.y)) / d1 / d2
-//     const theta = Math.acos(Math.min(Math.max(-1, cosTheta)), 1)
-//     if (theta > 3.1 && (d1 + d2) < 300) {
-//       continue
-//     }
-//     if (d1 + d2 > 10 && d1 > 1 && d2 > 1) { // retain vertices
-//       left = p
-//       simplifyed.push(p)
-//     }
-//   }
-//   simplifyed.push(points[last])
-//   return simplifyed
-// }
+import Brush from './Brush'
+import Cursor from '@/model/Cursor'
+
+const toFixed = number => {
+  return number.toFixed(2).replace(/\.?0+$/, '')
+}
 
 const distance = (p1, p2) => {
   return Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2))
@@ -68,7 +45,7 @@ const computeSharpLoss = (p1, p2, p3, p4, mergerP) => {
   return Math.abs(d1 - d2)
 }
 
-const simplify2 = points => {
+const simplify = points => {
   const s = [...points]
   const threshold = 0.6
   let i = 1
@@ -95,26 +72,15 @@ const simplify2 = points => {
       i++
     }
   }
+  if (s.length <= 2) {
+    return s
+  }
   if (distance(s[i + 1], s[i + 2]) < threshold) {
     s.pop()
   }
   if (distance(s[0], s[1]) < threshold) {
     s.unshift()
   }
-  i = 1
-  // while (i < s.length - 3) {
-  //   const leftP = s[i - 1]
-  //   const rightP = s[i + 2]
-  //   const mergerP = {
-  //     x: (s[i].x + s[i + 1].x) / 2,
-  //     y: (s[i].y + s[i + 1].y) / 2
-  //   }
-  //   const d1 = computeOffset(leftP, mergerP, s[i])
-  //   const d2 = computeOffset(mergerP, rightP, s[i])
-  //   console.log(Math.abs(d1 + d2))
-  //   i++
-  // }
-  // console.log(iterationCount)
   return s
 }
 
@@ -156,17 +122,20 @@ const genControlPoints = points => {
   return controlPoints
 }
 
-export default class Pen {
+export default class Pen extends Brush {
   constructor (recorder) {
-    this.recorder = recorder
+    super(recorder, 'Pen')
 
-    this.name = 'Pen'
     this.color = '#ff0000'
     this.penRadius = 5
     this.alpha = 0.3
 
     this._active = false
     this.needUpdate = false
+
+    this.cursor = new Cursor(require('@/assets/cursor/pen.png'), 5, 27)
+    this.cursorActive = new Cursor(require('@/assets/cursor/pen_active.png'), 5, 27)
+
     this._init()
   }
 
@@ -198,9 +167,9 @@ export default class Pen {
 
   stringify () {
     let output = `<PEN>${this.color};${this.penRadius.toFixed(2)};${this.alpha.toFixed(2)};`
-    output += this.path[0].x + ',' + this.path[0].y
+    output += toFixed(this.path[0].x) + ',' + toFixed(this.path[0].y)
     this.path.reduce((last, point) => {
-      output += `,${point.x - last.x},${point.y - last.y}`
+      output += `,${toFixed(point.x - last.x)},${toFixed(point.y - last.y)}`
       return point
     }, this.path[0])
     return output
@@ -228,7 +197,7 @@ export default class Pen {
       return false
     }
     this._active = false
-    this.path = simplify2(this.path)
+    this.path = simplify(this.path)
     // console.log(this.stringify())
     this.ctrlPoints = genControlPoints(this.path)
     // console.log(this.path)
@@ -289,6 +258,9 @@ export default class Pen {
     layer.y = y
     layer.w = w
     layer.h = h
+    if (this.ctrlPoints.length) {
+      layer.data = this.stringify()
+    }
   }
 
   _init () {

@@ -1,10 +1,13 @@
 <template>
-  <div :style="{ width: width + 'px', height: height + 'px' }">
+  <div id="airy-box" :style="{ width: width + 'px', height: height + 'px' }">
     <canvas id="airy-canvas" :width="width" :height="height"></canvas>
+    <ToolsBar ref="toolsBar"/>
   </div>
 </template>
 
 <script>
+import ToolsBar from '@/components/ToolsBar'
+
 import Context from '@/model/Context'
 import Recorder from '@/model/Recorder'
 import Pen from '@/model/brush/Pen'
@@ -26,7 +29,7 @@ export default {
       canvas: null,
       ctx: null,
       recorder: null,
-      airyCtx: null,
+      airyCtx: new Context(),
       needSolidify: false
     }
   },
@@ -43,17 +46,16 @@ export default {
     const ctx = canvas.getContext('2d')
     const recorder = new Recorder(canvas)
     const defaultTool = new Pen(recorder)
-    const airyCtx = new Context({
-      defaultTool
-    })
+    this.airyCtx.setActiveTool(defaultTool)
     this.canvas = canvas
     this.ctx = ctx
     this.recorder = recorder
-    this.airyCtx = airyCtx
     this.bindEvent()
     requestAnimationFrame(() => {
       this.render()
     })
+    this.setDefaultPen()
+    this.$refs.toolsBar.bind(this.airyCtx)
   },
   methods: {
     bindEvent () {
@@ -89,6 +91,19 @@ export default {
       }
       canvas.addEventListener('mouseup', userInputInterrupt)
       canvas.addEventListener('mouseleave', userInputInterrupt)
+
+      canvas.addEventListener('mousedown', this.setActivePen)
+      canvas.addEventListener('mouseup', this.setDefaultPen)
+      canvas.addEventListener('mouseleave', this.setDefaultPen)
+    },
+    setActivePen (e) {
+      if (e.button) {
+        return
+      }
+      this.canvas.style.cursor = this.airyCtx.getCursor(true)
+    },
+    setDefaultPen () {
+      this.canvas.style.cursor = this.airyCtx.getCursor()
     },
     render (time) {
       const ctx = this.ctx
@@ -112,11 +127,17 @@ export default {
     onrisize () {
       // TODO
     }
+  },
+  components: {
+    ToolsBar
   }
 }
 </script>
 
 <style lang="stylus">
+#airy-box
+  position relative
 #airy-canvas
-  outline solid 1px #ddd
+  border-radius 4px
+  background-color #fff
 </style>

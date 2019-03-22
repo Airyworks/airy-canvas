@@ -8,6 +8,7 @@ class Layer {
     this.h = 0
     this.x = 0
     this.y = 0
+    this.data = ''
   }
 }
 
@@ -21,8 +22,13 @@ export default class Recorder {
 
     this.activeIndex = 0
     this.history = []
+    this.tree = []
     this.furthestImgData = null
     this.nearestImgData = null
+
+    this.scale = 1
+    this.offsetX = 0
+    this.offsetY = 0
 
     const cacheCanvas = document.createElement('canvas')
     cacheCanvas.width = this.width
@@ -51,6 +57,7 @@ export default class Recorder {
   }
 
   solidify () {
+    this.tree.push(this.activeLayer.data)
     this.history.push(this.activeLayer)
     this.render(this.cacheCtx)
     this.nearestImgData = this.cacheCtx.getImageData(0, 0, this.width, this.height)
@@ -63,6 +70,7 @@ export default class Recorder {
     }
     const ctx = this.cacheCtx
     this.history.pop()
+    this.tree.pop()
     ctx.clearRect(0, 0, this.width, this.height)
     if (this.furthestImgData) {
       ctx.putImageData(this.furthestImgData, 0, 0)
@@ -80,6 +88,9 @@ export default class Recorder {
     if (!(ctx instanceof CanvasRenderingContext2D)) {
       return
     }
+    ctx.save()
+    ctx.scale(this.scale, this.scale)
+    ctx.translate(this.offsetX, this.offsetY)
     if (this.nearestImgData) {
       ctx.putImageData(this.nearestImgData, 0, 0)
     } else {
@@ -94,5 +105,6 @@ export default class Recorder {
       this.tempCtx.putImageData(al.layerImgData, al.x, al.y)
       ctx.drawImage(this.tempCanvas, 0, 0)
     }
+    ctx.restore()
   }
 }
