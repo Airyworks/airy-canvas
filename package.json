@@ -10,7 +10,7 @@
     "lint": "vue-cli-service lint"
   },
   "files": [
-    "dist"
+    "dist/index.umd.min.js"
   ],
   "keywords": [
     "canvas"
