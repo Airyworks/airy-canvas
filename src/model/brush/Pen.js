@@ -130,7 +130,7 @@ export default class Pen extends Brush {
     this._penRadius = 3
     this._alpha = 0.8
 
-    this.active = false
+    this._active = false
     this.needUpdate = false
 
     this.cursor = new Cursor(require('@/assets/cursor/pen.png'), 5, 27)
@@ -202,14 +202,14 @@ export default class Pen extends Brush {
 
   beginAtPos (x, y) {
     this._init()
-    this.active = true
+    this._active = true
     this.needUpdate = true
     this._updateBoxByNewPoint(x, y)
     this.path = [{ x, y }]
   }
 
   moveAtPos (x, y) {
-    if (!this.active) {
+    if (!this._active) {
       return
     }
     this.needUpdate = true
@@ -218,10 +218,10 @@ export default class Pen extends Brush {
   }
 
   endAtPos (x, y) {
-    if (!this.active) {
+    if (!this._active) {
       return false
     }
-    this.active = false
+    this._active = false
     this.path = simplify(this.path)
     this.ctrlPoints = genControlPoints(this.path)
     this.needUpdate = true

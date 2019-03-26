@@ -10,7 +10,7 @@ export default class Move extends Brush {
     this._active = false
     this.needUpdate = false
 
-    this._init()
+    this.updateXY(0, 0)
   }
 
   get paletteConfig () {
@@ -22,15 +22,18 @@ export default class Move extends Brush {
   }
 
   beginAtPos (x, y) {
-    this._init()
+    this.updateXY(x, y)
     this._active = true
-    this.needUpdate = true
+    // this.needUpdate = true
   }
 
   moveAtPos (x, y) {
     if (!this._active) {
       return
     }
+    this.recorder.offsetX += x - this.storeX
+    this.recorder.offsetY += y - this.storeY
+    this.updateXY(x, y)
     this.needUpdate = true
   }
 
@@ -39,6 +42,8 @@ export default class Move extends Brush {
       return false
     }
     this._active = false
+    this.recorder.offsetX += x - this.storeX
+    this.recorder.offsetY += y - this.storeY
     this.needUpdate = true
     return false
   }
@@ -47,7 +52,8 @@ export default class Move extends Brush {
     this.needUpdate = false
   }
 
-  _init () {
-    // TODO
+  updateXY (x, y) {
+    this.storeX = x
+    this.storeY = y
   }
 }

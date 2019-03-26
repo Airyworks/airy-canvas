@@ -66,7 +66,7 @@ export default class Recorder {
   }
 
   solidify () {
-    this.tree.push(this.activeLayer.data)
+    this.tree.push(`[${Date.now()}]` + this.activeLayer.data)
     this.history.push(this.activeLayer)
     this.render(this.cacheCtx)
     this.nearestImgData = this.cacheCtx.getImageData(0, 0, this.width, this.height)
