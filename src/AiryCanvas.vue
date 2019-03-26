@@ -1,12 +1,14 @@
 <template>
   <div id="airy-box" :style="{ width: width + 'px', height: height + 'px' }">
     <canvas id="airy-canvas" :width="width" :height="height"></canvas>
+    <PaletteBar ref="paletteBar"/>
     <ToolsBar ref="toolsBar"/>
   </div>
 </template>
 
 <script>
 import ToolsBar from '@/components/ToolsBar'
+import PaletteBar from '@/components/PaletteBar'
 
 import Recorder from '@/model/Recorder'
 import { Pen } from '@/model/brush'
@@ -122,7 +124,8 @@ export default {
     }
   },
   components: {
-    ToolsBar
+    ToolsBar,
+    PaletteBar
   }
 }
 </script>

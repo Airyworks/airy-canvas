@@ -126,11 +126,11 @@ export default class Pen extends Brush {
   constructor (recorder) {
     super(recorder, 'Pen')
 
-    this.color = '#ff0000'
-    this.penRadius = 5
-    this.alpha = 0.3
+    this._color = '#ff0000'
+    this._penRadius = 3
+    this._alpha = 0.8
 
-    this._active = false
+    this.active = false
     this.needUpdate = false
 
     this.cursor = new Cursor(require('@/assets/cursor/pen.png'), 5, 27)
@@ -139,14 +139,25 @@ export default class Pen extends Brush {
     this._init()
   }
 
+  get color () {
+    return this._color
+  }
+  get penRadius () {
+    return this._penRadius
+  }
+  get alpha () {
+    return this._alpha
+  }
   get paletteConfig () {
     return [
       {
-        name: 'color',
+        name: 'pen-color',
+        attribute: 'color',
         type: 'Color'
       },
       {
-        name: 'size',
+        name: 'pen-size',
+        attribute: 'penRadius',
         type: 'Number',
         option: {
           min: 1,
@@ -155,7 +166,8 @@ export default class Pen extends Brush {
         }
       },
       {
-        name: 'alpha',
+        name: 'pen-alpha',
+        attribute: 'alpha',
         type: 'Number',
         option: {
           min: 0,
@@ -163,6 +175,19 @@ export default class Pen extends Brush {
         }
       }
     ]
+  }
+  set (name, value) {
+    switch (name) {
+      case 'pen-color':
+        this._color = value
+        break
+      case 'pen-size':
+        this._penRadius = value
+        break
+      case 'pen-alpha':
+        this._alpha = value
+        break
+    }
   }
 
   stringify () {
@@ -177,14 +202,14 @@ export default class Pen extends Brush {
 
   beginAtPos (x, y) {
     this._init()
-    this._active = true
+    this.active = true
     this.needUpdate = true
     this._updateBoxByNewPoint(x, y)
     this.path = [{ x, y }]
   }
 
   moveAtPos (x, y) {
-    if (!this._active) {
+    if (!this.active) {
       return
     }
     this.needUpdate = true
@@ -193,10 +218,10 @@ export default class Pen extends Brush {
   }
 
   endAtPos (x, y) {
-    if (!this._active) {
+    if (!this.active) {
       return false
     }
-    this._active = false
+    this.active = false
     this.path = simplify(this.path)
     this.ctrlPoints = genControlPoints(this.path)
     this.needUpdate = true

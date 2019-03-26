@@ -62,8 +62,11 @@ export default {
 
 <style lang="stylus">
 #airy-toolsbar
+  box-sizing border-box
   position absolute
-  width calc(100% - 12px)
+  z-index 10
+  width calc(100% - 4px)
+  height 42px
   left 2px
   bottom 2px
   border-radius 4px

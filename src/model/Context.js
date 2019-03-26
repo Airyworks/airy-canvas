@@ -40,7 +40,7 @@ export default class Context {
     const handles = this.handles.get('changetool')
     if (handles) {
       handles.forEach(cb => {
-        cb()
+        cb(tool)
       })
     }
   }
