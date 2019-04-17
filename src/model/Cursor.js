@@ -1,4 +1,4 @@
-'use strtic'
+'use strict'
 
 export default class Cursor {
   constructor (url, x, y) {
