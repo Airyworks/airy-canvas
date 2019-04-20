@@ -1,13 +1,28 @@
 <template>
   <div id="app">
-    <AiryCanvas/>
+    <airy-canvas
+      :data="airyCanvasData"
+      :options="airyCanvasOptions"
+    />
   </div>
 </template>
 
 <script>
+import AiryCanvas from '@/AiryCanvas'
 
 export default {
-  name: 'example'
+  name: 'example',
+  components: {
+    AiryCanvas
+  },
+  data () {
+    return {
+      airyCanvasData: [],
+      airyCanvasOptions: {
+        fluid: true
+      }
+    }
+  }
 }
 </script>
 
@@ -19,4 +34,7 @@ body
   display flex
   justify-content center
   align-items center
+  #app
+    height 100%
+    width 100%
 </style>
