@@ -1,10 +1,13 @@
-import AiryCanvas from '@/main/'
 import { cloneDeep } from 'lodash'
+import AiryCanvas from '@/main/'
+import defaultPlugins from '@/plugins/'
 
 const defaultOptions = {
   width: 1000,
   height: 600,
-  fluid: false
+  fluid: false,
+  store: undefined,
+  plugins: []
 }
 
 export default {
@@ -43,9 +46,12 @@ export default {
       }
     }
   },
+  created () {
+    this.plugins = defaultPlugins.concat(this._options.plugins).map(Plugin => new Plugin())
+  },
   mounted () {
     this.box = this.$refs['airy-box']
-    this.airyCanvas = new AiryCanvas(this.box, this._options)
+    this.airyCanvas = new AiryCanvas(this.box, this._options, this.plugins, cloneDeep(this.data))
     window.addEventListener('resize', this.resize)
     this.resize()
   },
@@ -57,6 +63,9 @@ export default {
       if (this._options.fluid) {
         this.airyCanvas.resize()
       }
+    },
+    addPlugin (Plugin) {
+      this.plugins.push(new Plugin())
     }
   }
 }

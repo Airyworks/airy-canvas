@@ -39,7 +39,7 @@ export default {
 </script>
 ```
 
-## Plugins
+## Plugins (Not finished)
 Want more tools in Airy Canvas? Airy Canvas accept plugins.
 
 ### init with Airy Canvas
@@ -125,5 +125,4 @@ export default {
 | height  | canvas height | number | - | 600 |
 | fluid  | resize by container size | boolean | - | false |
 | plugins  | plugins array | array | - | [] |
-
-
+| store  | vuex integration options | object | - | undefined |

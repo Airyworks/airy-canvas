@@ -4,12 +4,14 @@ import * as PIXI from 'pixi.js'
 // PIXI.utils.skipHello()
 
 export default class {
-  constructor (container, { fluid, width, height }) {
+  constructor (container, { fluid, width, height }, plugins, history) {
     this.fluid = fluid
+    this.plugins = plugins
+    this.history = history
     if (fluid) {
       this.app = new PIXI.Application({
         autoResize: true,
-        backgroundColor: 0x1099bb,
+        backgroundColor: 0xeeeeee,
         resolution: window.devicePixelRatio || 1
       })
     } else {
@@ -21,10 +23,31 @@ export default class {
       })
     }
     container.appendChild(this.app.view)
+
+    this.renderHistory()
+    // this.app.ticker.add((delta) => {
+    //   console.log('render ticker', delta)
+    // })
   }
 
   resize () {
     const parent = this.app.view.parentNode
     this.app.renderer.resize(parent.clientWidth, parent.clientHeight)
+  }
+
+  render (item) {
+    console.log(this.plugins)
+    for (const plugin of this.plugins) {
+      console.log(plugin.name)
+      if (item.renderer === plugin.name) {
+        this.app.stage.addChild(plugin.render(item))
+      }
+    }
+  }
+
+  renderHistory () {
+    for (const item of this.history) {
+      this.render(item)
+    }
   }
 }

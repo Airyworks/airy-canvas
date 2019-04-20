@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" @click="addData">
     <airy-canvas
       :data="airyCanvasData"
       :options="airyCanvasOptions"
@@ -9,6 +9,7 @@
 
 <script>
 import AiryCanvas from '@/AiryCanvas'
+import mockdata, { generate } from './mock-data'
 
 export default {
   name: 'example',
@@ -17,10 +18,15 @@ export default {
   },
   data () {
     return {
-      airyCanvasData: [],
+      airyCanvasData: mockdata,
       airyCanvasOptions: {
         fluid: true
       }
+    }
+  },
+  methods: {
+    addData () {
+      this.airyCanvasData.push(generate())
     }
   }
 }
