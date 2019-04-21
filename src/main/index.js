@@ -7,7 +7,7 @@ export default class {
   constructor (container, { fluid, width, height }, plugins, history) {
     this.fluid = fluid
     this.plugins = plugins
-    this._activePlugin = plugins.filter(plugin => /brush/.test(plugin.name))[0] // TODO: find another elegant way
+    this._activePlugin = plugins[0]
     this.history = history
     if (fluid) {
       this.app = new PIXI.Application({

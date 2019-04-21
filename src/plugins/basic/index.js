@@ -13,5 +13,9 @@ export default class {
     return Component
   }
 
+  beginWithMouse (mouse, state) {}
+  moveWithMouse (mouse) {}
+  endWithMouse (mouse) {}
+
   render () {}
 }
