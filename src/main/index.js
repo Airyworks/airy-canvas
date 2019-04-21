@@ -22,6 +22,8 @@ export default class {
         resolution: window.devicePixelRatio || 1
       })
     }
+
+    this.app.view.style.display = 'block'
     container.appendChild(this.app.view)
 
     this.renderHistory()
