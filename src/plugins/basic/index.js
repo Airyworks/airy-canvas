@@ -13,7 +13,7 @@ export default class {
     return Component
   }
 
-  beginWithMouse (mouse, state) {}
+  beginWithMouse (mouse, stage) {}
   moveWithMouse (mouse) {}
   endWithMouse (mouse) {}
 

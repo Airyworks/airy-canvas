@@ -43,13 +43,13 @@ export default class {
       if (mouse.buttons % 2) {
         if (!pointerDownSwitch) {
           pointerDownSwitch = true
-          this.activePlugin.beginWithMouse(mouse, this.app.stage)
+          this.activePlugin.beginWithMouse(mouse, this.app)
         } else {
-          this.activePlugin.moveWithMouse(mouse, this.app.stage)
+          this.activePlugin.moveWithMouse(mouse, this.app)
         }
       } else if (pointerDownSwitch) {
         pointerDownSwitch = false
-        this.activePlugin.endWithMouse(mouse, this.app.stage)
+        this.activePlugin.endWithMouse(mouse, this.app)
       }
     })
   }

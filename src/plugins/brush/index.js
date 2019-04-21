@@ -149,7 +149,8 @@ export default class extends Basic {
     return Component
   }
 
-  beginWithMouse (mouse, state) {
+  beginWithMouse (mouse, { stage }) {
+    console.log(mouse)
     const line = new Graphics()
     this.activeLine = line
     this.path = [{
@@ -157,7 +158,7 @@ export default class extends Basic {
       y: mouse.global.y
     }]
     this.ctrlPoints = []
-    state.addChild(line)
+    stage.addChild(line)
     this.updateLineByPath()
   }
 
