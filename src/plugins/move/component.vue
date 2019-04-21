@@ -1,5 +1,11 @@
 <template>
-  <div class="airy-canvas-common-plugin" @click="$emit('focus', cfg.name)">
+  <div
+    class="airy-canvas-common-plugin"
+    :style="{
+      color: active ? '#1079bb' : '#333'
+    }"
+    @click="$emit('focus', cfg.name)"
+  >
     <font-awesome-icon
       :icon="icon"
       size="1x"
@@ -17,14 +23,20 @@ export default {
   components: {
     FontAwesomeIcon
   },
-  computed: {
-    icon () {
-      return faArrowsAlt
+  props: {
+    active: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
     return {
       cfg
+    }
+  },
+  computed: {
+    icon () {
+      return faArrowsAlt
     }
   },
   methods: {

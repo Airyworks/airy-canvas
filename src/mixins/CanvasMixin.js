@@ -43,7 +43,8 @@ export default {
       canvasSize: {
         width: 0,
         height: 0
-      }
+      },
+      active: undefined
     }
   },
   created () {
@@ -69,6 +70,7 @@ export default {
       this.plugins.push(new Plugin())
     },
     activePlugin (activeName) {
+      console.log('active', activeName)
       for (const plugin of this.plugins) {
         if (plugin.name === activeName) {
           this.active = plugin
