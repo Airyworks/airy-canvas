@@ -3,6 +3,20 @@ import * as PIXI from 'pixi.js'
 // remove PIXI banner from console if necessary
 // PIXI.utils.skipHello()
 
+class MouseEvent {
+  constructor (mouse, state) {
+    this.global = mouse.global.clone()
+
+    // TODO: consider scaling
+    this.locale = new PIXI.Point(
+      mouse.global.x - state.position.x,
+      mouse.global.y - state.position.y
+    )
+
+    // TODO: more useful info
+  }
+}
+
 export default class {
   constructor (container, { fluid, width, height }, plugins, history) {
     this.fluid = fluid
@@ -30,9 +44,6 @@ export default class {
     container.appendChild(this.app.view)
 
     this.renderHistory()
-    // this.app.ticker.add((delta) => {
-    //   console.log('render ticker', delta)
-    // })
 
     let pointerDownSwitch = false
     this.app.ticker.add(() => {
@@ -43,13 +54,13 @@ export default class {
       if (mouse.buttons % 2) {
         if (!pointerDownSwitch) {
           pointerDownSwitch = true
-          this.activePlugin.beginWithMouse(mouse, this.app)
+          this.activePlugin.beginWithMouse(this.app, new MouseEvent(mouse, this.app.stage))
         } else {
-          this.activePlugin.moveWithMouse(mouse, this.app)
+          this.activePlugin.moveWithMouse(this.app, new MouseEvent(mouse, this.app.stage))
         }
       } else if (pointerDownSwitch) {
         pointerDownSwitch = false
-        this.activePlugin.endWithMouse(mouse, this.app)
+        this.activePlugin.endWithMouse(this.app, new MouseEvent(mouse, this.app.stage))
       }
     })
   }

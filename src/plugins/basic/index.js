@@ -13,9 +13,9 @@ export default class {
     return Component
   }
 
-  beginWithMouse (mouse, stage) {}
-  moveWithMouse (mouse) {}
-  endWithMouse (mouse) {}
+  beginWithMouse (app, mouse) {}
+  moveWithMouse (app, mouse) {}
+  endWithMouse (app, mouse) {}
 
   render () {}
 }

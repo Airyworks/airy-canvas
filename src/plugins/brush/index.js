@@ -149,28 +149,22 @@ export default class extends Basic {
     return Component
   }
 
-  beginWithMouse (mouse, { stage }) {
+  beginWithMouse ({ stage }, mouse) {
     console.log(mouse)
     const line = new Graphics()
     this.activeLine = line
-    this.path = [{
-      x: mouse.global.x,
-      y: mouse.global.y
-    }]
+    this.path = [mouse.locale]
     this.ctrlPoints = []
     stage.addChild(line)
     this.updateLineByPath()
   }
 
-  moveWithMouse (mouse) {
-    this.path.push({
-      x: mouse.global.x,
-      y: mouse.global.y
-    })
+  moveWithMouse (_, mouse) {
+    this.path.push(mouse.locale)
     this.updateLineByPath()
   }
 
-  endWithMouse (mouse) {
+  endWithMouse () {
     if (!this.path.length) {
       return
     }

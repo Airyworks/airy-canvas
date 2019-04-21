@@ -11,7 +11,7 @@ export default class extends Basic {
     return cfg.name
   }
 
-  beginWithMouse (mouse, { stage }) {
+  beginWithMouse ({ stage }, mouse) {
     console.log(stage.pivot)
     this.start = {
       x: mouse.global.x,
@@ -23,7 +23,7 @@ export default class extends Basic {
     }
   }
 
-  moveWithMouse (mouse, { stage }) {
+  moveWithMouse ({ stage }, mouse) {
     stage.position.x = mouse.global.x - this.start.x + this.position.x
     stage.position.y = mouse.global.y - this.start.y + this.position.y
   }
