@@ -1,5 +1,5 @@
 <template>
-  <div class="airy-canvas-common-plugin">
+  <div class="airy-canvas-common-plugin" @click="$emit('focus', cfg.name)">
     <font-awesome-icon
       :icon="icon"
       size="1x"
@@ -8,8 +8,9 @@
 </template>
 
 <script>
+import cfg from './airy.plugin'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faMinus } from '@fortawesome/free-solid-svg-icons'
+import { faArrowsAlt } from '@fortawesome/free-solid-svg-icons'
 
 export default {
   name: 'BrushIcon',
@@ -18,7 +19,17 @@ export default {
   },
   computed: {
     icon () {
-      return faMinus
+      return faArrowsAlt
+    }
+  },
+  data () {
+    return {
+      cfg
+    }
+  },
+  methods: {
+    clk () {
+      console.log('clk')
     }
   }
 }

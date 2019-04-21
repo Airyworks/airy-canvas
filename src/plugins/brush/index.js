@@ -1,6 +1,7 @@
+import Basic from '@/plugins/basic/'
 import Component from './component'
 
-export default class {
+export default class extends Basic {
   // constructor () {}
 
   get name () {

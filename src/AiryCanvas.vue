@@ -7,11 +7,14 @@
     <div class="airy-box" ref="airy-box" />
     <tool-bar
       :tools="plugins"
+      :active="active ? active.name : ''"
+      @active="activePlugin"
     />
   </div>
 </template>
 
 <script>
+import '@/assets/common.styl'
 import ToolBar from '@/components/ToolBar'
 import CanvasMixin from '@/mixins/CanvasMixin'
 

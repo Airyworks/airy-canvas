@@ -7,6 +7,7 @@ export default class {
   constructor (container, { fluid, width, height }, plugins, history) {
     this.fluid = fluid
     this.plugins = plugins
+    this.active = this.plugins[0]
     this.history = history
     if (fluid) {
       this.app = new PIXI.Application({
@@ -38,9 +39,7 @@ export default class {
   }
 
   render (item) {
-    console.log(this.plugins)
     for (const plugin of this.plugins) {
-      console.log(plugin.name)
       if (item.renderer === plugin.name) {
         this.app.stage.addChild(plugin.render(item))
       }
