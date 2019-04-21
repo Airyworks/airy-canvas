@@ -49,6 +49,14 @@ const simplify = points => {
   const threshold = 0.6
   let i = 1
   let iteration = true
+  for (let i = 1; i < s.length; i++) {
+    const prev = s[i - 1]
+    const curr = s[i]
+    if (curr.x === prev.x && curr.y === prev.y) {
+      s.splice(i, 1)
+      i--
+    }
+  }
   while (iteration) {
     i = 1
     iteration = false
@@ -162,6 +170,9 @@ export default class extends Basic {
   }
 
   endWithMouse (mouse) {
+    if (!this.path.length) {
+      return
+    }
     this.path = simplify(this.path)
     this.ctrlPoints = genControlPoints(this.path)
     this.updateLineByPath()
@@ -173,7 +184,7 @@ export default class extends Basic {
       return
     }
     this.activeLine.clear()
-    this.activeLine.lineStyle(this.width, this.color)
+    this.activeLine.lineStyle(this.width, this.color, this.alpha, 0.5)
     this.path.forEach((point, index) => {
       if (!index) {
         this.activeLine.moveTo(point.x, point.y)
