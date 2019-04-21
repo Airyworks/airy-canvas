@@ -203,13 +203,32 @@ export default class extends Basic {
     return output
   }
 
-  render ({ data }) {
+  render (data) {
+    const segment = data.split(';')
+    const [color, width, alpha] = segment.slice(0, -1)
+    const points = segment.slice(-1)[0].split(',').map(s => Number(s))
+    const path = [{
+      x: points[0],
+      y: points[1]
+    }]
+    for (let i = 2; i < points.length; i += 2) {
+      path.push({
+        x: points[i] + points[i - 2],
+        y: points[i + 1] + points[i - 1]
+      })
+    }
+    const ctrlPoints = genControlPoints(path)
     const line = new Graphics()
-    line.position.set(data.points[0][0], data.points[0][1])
-    line.lineStyle(2, data.color)
-      .moveTo(0, 0)
-      .lineTo(data.points[1][0], data.points[1][1])
-    console.log(line)
+    line.lineStyle(width, color, alpha, 0.5)
+    path.forEach((point, index) => {
+      if (!index) {
+        line.moveTo(point.x, point.y)
+      } else {
+        const cp1 = ctrlPoints[index - 1].right
+        const cp2 = ctrlPoints[index].left
+        line.bezierCurveTo(cp1.x, cp1.y, cp2.x, cp2.y, point.x, point.y)
+      }
+    })
     return line
   }
 }
