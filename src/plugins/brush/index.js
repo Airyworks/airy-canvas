@@ -1,8 +1,11 @@
 import { Graphics } from 'pixi.js'
+import Basic from '@/plugins/basic/'
 import Component from './component'
 
-export default class {
+export default class extends Basic {
   constructor () {
+    super()
+
     this.width = 2
     this.color = 0x1099bb
 

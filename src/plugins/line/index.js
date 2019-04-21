@@ -1,8 +1,10 @@
 import { Graphics } from 'pixi.js'
+import Basic from '@/plugins/basic/'
 import Component from './component'
 
-export default class {
+export default class extends Basic {
   constructor () {
+    super()
     this.a = 1
   }
 
@@ -20,7 +22,6 @@ export default class {
     line.lineStyle(2, data.color)
       .moveTo(0, 0)
       .lineTo(data.points[1][0], data.points[1][1])
-    console.log(line)
     return line
   }
 }

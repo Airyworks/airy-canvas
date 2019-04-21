@@ -68,9 +68,7 @@ export default class {
   }
 
   render (item) {
-    console.log(this.plugins)
     for (const plugin of this.plugins) {
-      console.log(plugin.name)
       if (item.renderer === plugin.name) {
         this.app.stage.addChild(plugin.render(item))
       }

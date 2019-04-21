@@ -13,6 +13,8 @@
       <component
         :key="key"
         :is="tool.component"
+        :active="tool.name === active"
+        @focus="$emit('active', arguments[0])"
       />
     </template>
   </div>
@@ -27,6 +29,10 @@ export default {
       default: () => {
         return []
       }
+    },
+    active: {
+      type: String,
+      default: 'basic-move'
     }
   },
   data () {
