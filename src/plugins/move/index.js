@@ -17,20 +17,14 @@ export default class extends Basic {
       x: mouse.global.x,
       y: mouse.global.y
     }
-    this.cameraPivot = {
-      x: stage.pivot.x,
-      y: stage.pivot.y
+    this.position = {
+      x: stage.position.x,
+      y: stage.position.y
     }
   }
 
   moveWithMouse (mouse, { stage }) {
-    stage.pivot.x = this.start.x - mouse.global.x + this.cameraPivot.x
-    stage.pivot.y = this.start.y - mouse.global.y + this.cameraPivot.y
+    stage.position.x = mouse.global.x - this.start.x + this.position.x
+    stage.position.y = mouse.global.y - this.start.y + this.position.y
   }
-
-  // endWithMouse (mouse) {
-  //   this.path = simplify(this.path)
-  //   this.ctrlPoints = genControlPoints(this.path)
-  //   this.updateLineByPath()
-  // }
 }
