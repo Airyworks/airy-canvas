@@ -148,6 +148,7 @@ export default class extends Basic {
       x: mouse.global.x,
       y: mouse.global.y
     }]
+    this.ctrlPoints = []
     state.addChild(line)
     this.updateLineByPath()
   }
@@ -164,6 +165,7 @@ export default class extends Basic {
     this.path = simplify(this.path)
     this.ctrlPoints = genControlPoints(this.path)
     this.updateLineByPath()
+    console.log(this.stringify())
   }
 
   updateLineByPath () {

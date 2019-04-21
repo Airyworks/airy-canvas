@@ -11,12 +11,14 @@ export default class {
     this.history = history
     if (fluid) {
       this.app = new PIXI.Application({
+        antialias: true,
         autoResize: true,
         backgroundColor: 0xeeeeee,
         resolution: window.devicePixelRatio || 1
       })
     } else {
       this.app = new PIXI.Application({
+        antialias: true,
         width,
         height,
         backgroundColor: 0x1099bb,
