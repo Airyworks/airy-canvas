@@ -7,6 +7,7 @@ export default class {
   constructor (container, { fluid, width, height }, plugins, history) {
     this.fluid = fluid
     this.plugins = plugins
+    this._activePlugin = plugins.filter(plugin => /brush/.test(plugin.name))[0] // TODO: find another elegant way
     this.history = history
     if (fluid) {
       this.app = new PIXI.Application({
@@ -30,6 +31,35 @@ export default class {
     // this.app.ticker.add((delta) => {
     //   console.log('render ticker', delta)
     // })
+
+    let pointerDownSwitch = false
+    this.app.ticker.add(() => {
+      // TODO: package following method, remove from constructors
+      const mouse = this.app.renderer.plugins.interaction.mouse
+
+      // left mouse button press
+      if (mouse.buttons % 2) {
+        if (!pointerDownSwitch) {
+          pointerDownSwitch = true
+          this.activePlugin.beginWithMouse(mouse, this.app.stage)
+        } else {
+          this.activePlugin.moveWithMouse(mouse, this.app.stage)
+        }
+      } else if (pointerDownSwitch) {
+        pointerDownSwitch = false
+        this.activePlugin.endWithMouse(mouse, this.app.stage)
+      }
+    })
+  }
+
+  get activePlugin () {
+    return this._activePlugin
+  }
+  set activePlugin (plugin) {
+    // TODO:
+    // check whether the parameter is a plugin
+    // or change the plugin by the parameter as it's name
+    this._activePlugin = plugin
   }
 
   resize () {
