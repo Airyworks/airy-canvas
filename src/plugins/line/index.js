@@ -5,7 +5,8 @@ import Component from './component'
 export default class extends Basic {
   constructor () {
     super()
-    this.a = 1
+    this.color = 0x1099bb
+    this.start = { x: 0, y: 0 }
   }
 
   get name () {
@@ -14,6 +15,30 @@ export default class extends Basic {
 
   get component () {
     return Component
+  }
+
+  beginWithMouse ({ stage }, { local }) {
+    const line = new Graphics()
+    this.activeLine = line
+    line.position.set(local.x, local.y)
+    this.start = {
+      x: local.x,
+      y: local.y
+    }
+    stage.addChild(line)
+  }
+
+  moveWithMouse (_, { local }) {
+    if (this.activeLine) {
+      this.activeLine.clear()
+      this.activeLine.lineStyle(2, this.color)
+        .moveTo(0, 0)
+        .lineTo(local.x - this.start.x, local.y - this.start.y)
+    }
+  }
+
+  endWithMouse () {
+    this.activeLine = undefined
   }
 
   render ({ data }) {

@@ -153,14 +153,14 @@ export default class extends Basic {
     console.log(mouse)
     const line = new Graphics()
     this.activeLine = line
-    this.path = [mouse.locale]
+    this.path = [mouse.local]
     this.ctrlPoints = []
     stage.addChild(line)
     this.updateLineByPath()
   }
 
   moveWithMouse (_, mouse) {
-    this.path.push(mouse.locale)
+    this.path.push(mouse.local)
     this.updateLineByPath()
   }
 

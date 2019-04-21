@@ -1,21 +1,8 @@
 import * as PIXI from 'pixi.js'
+import MouseEvent from './mouse-event'
 
 // remove PIXI banner from console if necessary
 // PIXI.utils.skipHello()
-
-class MouseEvent {
-  constructor (mouse, state) {
-    this.global = mouse.global.clone()
-
-    // TODO: consider scaling
-    this.locale = new PIXI.Point(
-      mouse.global.x - state.position.x,
-      mouse.global.y - state.position.y
-    )
-
-    // TODO: more useful info
-  }
-}
 
 export default class {
   constructor (container, { fluid, width, height }, plugins, history) {
@@ -45,23 +32,9 @@ export default class {
 
     this.renderHistory()
 
-    let pointerDownSwitch = false
-    this.app.ticker.add(() => {
-      // TODO: package following method, remove from constructors
-      const mouse = this.app.renderer.plugins.interaction.mouse
-
-      // left mouse button press
-      if (mouse.buttons % 2) {
-        if (!pointerDownSwitch) {
-          pointerDownSwitch = true
-          this.activePlugin.beginWithMouse(this.app, new MouseEvent(mouse, this.app.stage))
-        } else {
-          this.activePlugin.moveWithMouse(this.app, new MouseEvent(mouse, this.app.stage))
-        }
-      } else if (pointerDownSwitch) {
-        pointerDownSwitch = false
-        this.activePlugin.endWithMouse(this.app, new MouseEvent(mouse, this.app.stage))
-      }
+    this.pointerDownSwitch = false
+    this.app.ticker.add((delta) => {
+      this.ticker(delta)
     })
   }
 
@@ -91,6 +64,23 @@ export default class {
   renderHistory () {
     for (const item of this.history) {
       this.render(item)
+    }
+  }
+
+  ticker (delta) {
+    const mouse = this.app.renderer.plugins.interaction.mouse
+
+    // left mouse button press
+    if (mouse.buttons % 2) {
+      if (!this.pointerDownSwitch) {
+        this.pointerDownSwitch = true
+        this.activePlugin.beginWithMouse(this.app, new MouseEvent(mouse, this.app.stage))
+      } else {
+        this.activePlugin.moveWithMouse(this.app, new MouseEvent(mouse, this.app.stage))
+      }
+    } else if (this.pointerDownSwitch) {
+      this.pointerDownSwitch = false
+      this.activePlugin.endWithMouse(this.app, new MouseEvent(mouse, this.app.stage))
     }
   }
 }
