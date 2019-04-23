@@ -4804,6 +4804,11 @@ kind-of@^6.0.0, kind-of@^6.0.2:
   resolved "https://registry.yarnpkg.com/kind-of/-/kind-of-6.0.2.tgz#01146b36a6218e64e58f3a8d66de5d7fc6f6d051"
   integrity sha512-s5kLOcnH0XqDO+FvuaLX8DDjZ18CGFk7VygH40QoKPUQhW4e2rvM0rwUq0t8IQDOwYSeLK01U90OjzBTme2QqA==
 
+koa-compose@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/koa-compose/-/koa-compose-4.1.0.tgz#507306b9371901db41121c812e923d0d67d3e877"
+  integrity sha512-8ODW8TrDuMYvXRwra/Kh7/rJo9BtOfPc6qO8eAfC80CnCvSjSl0bkRM24X6/XBBEyj0v1nRUQ1LyOy3dbqOWXw==
+
 launch-editor-middleware@^2.2.1:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/launch-editor-middleware/-/launch-editor-middleware-2.2.1.tgz#e14b07e6c7154b0a4b86a0fd345784e45804c157"
@@ -7638,6 +7643,11 @@ timsort@^0.3.0:
   resolved "https://registry.yarnpkg.com/timsort/-/timsort-0.3.0.tgz#405411a8e7e6339fe64db9a234de11dc31e02bd4"
   integrity sha1-QFQRqOfmM5/mTbmiNN4R3DHgK9Q=
 
+tinycolor2@^1.4.1:
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/tinycolor2/-/tinycolor2-1.4.1.tgz#f4fad333447bc0b07d4dc8e9209d8f39a8ac77e8"
+  integrity sha1-9PrTM0R7wLB9TcjpIJ2POaisd+g=
+
 tmp@^0.0.33:
   version "0.0.33"
   resolved "https://registry.yarnpkg.com/tmp/-/tmp-0.0.33.tgz#6d34335889768d21b2bcda0aa277ced3b1bfadf9"
@@ -8338,3 +8348,16 @@ yorkie@^2.0.0:
     is-ci "^1.0.10"
     normalize-path "^1.0.0"
     strip-indent "^2.0.0"
+
+yy-counter@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/yy-counter/-/yy-counter-2.1.0.tgz#6c023c5a5f48a962cf34f234cbb26f64d8bd2c2e"
+  integrity sha1-bAI8Wl9IqWLPNPI0y7JvZNi9LC4=
+
+yy-fps@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/yy-fps/-/yy-fps-1.0.0.tgz#d196282a3fb16c0a68185b57b0f5e99f1c601a78"
+  integrity sha512-yMm6G3Bj0lfVGwZRVYkksoZl22j237XoaZ7Q9+Wck4FikOw4LWcYwEU6CvKDs18oIAlknBa4MitBrlEuOn1WNg==
+  dependencies:
+    tinycolor2 "^1.4.1"
+    yy-counter "^2.1.0"

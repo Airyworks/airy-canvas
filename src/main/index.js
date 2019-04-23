@@ -1,6 +1,12 @@
 import * as PIXI from 'pixi.js'
+import compose from 'koa-compose'
+import FPS from 'yy-fps'
 // import Zoom from './zoom'
 import MouseEvent from './mouse-event'
+import {
+  activePluginSymbol,
+  isAnimateSymbol
+} from './symbols'
 
 // remove PIXI banner from console if necessary
 // PIXI.utils.skipHello()
@@ -15,7 +21,7 @@ export default class {
   constructor (container, { fluid, width, height }, plugins, history) {
     this.fluid = fluid
     this.plugins = plugins
-    this._activePlugin = plugins[0]
+    this[activePluginSymbol] = plugins[0]
     this.history = history
     if (fluid) {
       this.app = new PIXI.Application(withPIXIDefaultOptions({
@@ -35,46 +41,55 @@ export default class {
     container.appendChild(this.app.view)
 
     this.args = {
+      airy: this,
       app: this.app
     }
 
     this.renderHistory()
 
     this.pointerDownSwitch = false
-    // this.app.ticker.add((delta) => {
-    //   this.ticker(delta)
-    // })
     this.addEventListener()
+    this.animateMiddleware = []
+    this.animateCompose = compose(this.animateMiddleware)
+
+    this.fps = new FPS()
 
     this.needUpdate = true
-    requestAnimationFrame(timer => {
-      this.update(timer)
-    })
+    this[isAnimateSymbol] = false
+    requestAnimationFrame(this.update.bind(this))
   }
 
   get activePlugin () {
-    return this._activePlugin
+    return this[activePluginSymbol]
   }
   set activePlugin (plugin) {
     // TODO:
     // check whether the parameter is a plugin
     // or change the plugin by the parameter as it's name
-    if (plugin !== this._activePlugin) {
-      this._activePlugin.active(this.args)
-      this._activePlugin = plugin
-      this._activePlugin.inactive(this.args)
-      // this._activePlugin.call(this._activePlugin.inactive, this.args)
+    if (plugin !== this[activePluginSymbol]) {
+      this[activePluginSymbol].active(this.args)
+      this[activePluginSymbol] = plugin
+      this[activePluginSymbol].inactive(this.args)
     }
   }
 
+  get isAnimate () {
+    return this[isAnimateSymbol]
+  }
+  set isAnimate (status) {
+    // status = true => enable render for 60FPS
+    // status = false => render for required frames only
+    this[isAnimateSymbol] = status
+  }
+
   update (timer) {
-    if (this.needUpdate) {
+    this.fps.frame()
+    if (this.isAnimate || this.needUpdate) {
       this.needUpdate = false
+      this.animateCompose(this.args)
       this.app.render()
     }
-    requestAnimationFrame(timer => {
-      this.update(timer)
-    })
+    requestAnimationFrame(this.update.bind(this))
   }
 
   resize () {
@@ -97,25 +112,6 @@ export default class {
   renderHistory () {
     for (const item of this.history) {
       this.render(item)
-    }
-  }
-
-  ticker (delta) {
-    console.warn('function ticker() has been abandoned')
-
-    const mouse = this.app.renderer.plugins.interaction.mouse
-
-    // left mouse button press
-    if (mouse.buttons % 2) {
-      if (!this.pointerDownSwitch) {
-        this.pointerDownSwitch = true
-        this.activePlugin.beginWithMouse(this.args, new MouseEvent(mouse, this.app.stage))
-      } else {
-        this.activePlugin.moveWithMouse(this.args, new MouseEvent(mouse, this.app.stage))
-      }
-    } else if (this.pointerDownSwitch) {
-      this.pointerDownSwitch = false
-      this.activePlugin.endWithMouse(this.args, new MouseEvent(mouse, this.app.stage))
     }
   }
 
@@ -149,5 +145,39 @@ export default class {
   destroy () {
     this.app.destroy()
     // TODO: release memory
+  }
+
+  addAnimateMiddleware (func) {
+    if (this.animateMiddleware.indexOf(func) < 0) {
+      this.animateMiddleware.push(func)
+      this.animateCompose = compose(this.animateMiddleware)
+    }
+  }
+
+  removeAnimateMiddleware (func) {
+    const index = this.animateMiddleware.indexOf(func)
+    if (index >= 0) {
+      this.animateMiddleware.splice(index, 1)
+      this.animateCompose = compose(this.animateMiddleware)
+    }
+  }
+
+  ticker (delta) {
+    console.warn('function ticker() has been abandoned')
+
+    const mouse = this.app.renderer.plugins.interaction.mouse
+
+    // left mouse button press
+    if (mouse.buttons % 2) {
+      if (!this.pointerDownSwitch) {
+        this.pointerDownSwitch = true
+        this.activePlugin.beginWithMouse(this.args, new MouseEvent(mouse, this.app.stage))
+      } else {
+        this.activePlugin.moveWithMouse(this.args, new MouseEvent(mouse, this.app.stage))
+      }
+    } else if (this.pointerDownSwitch) {
+      this.pointerDownSwitch = false
+      this.activePlugin.endWithMouse(this.args, new MouseEvent(mouse, this.app.stage))
+    }
   }
 }
