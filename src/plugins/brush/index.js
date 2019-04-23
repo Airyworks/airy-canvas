@@ -149,13 +149,13 @@ export default class extends Basic {
     return Component
   }
 
-  beginWithMouse ({ viewport }, mouse) {
+  beginWithMouse ({ app }, mouse) {
     console.log(mouse)
     const line = new Graphics()
     this.activeLine = line
     this.path = [mouse.local]
     this.ctrlPoints = []
-    viewport.addChild(line)
+    app.stage.addChild(line)
     this.updateLineByPath()
     return false
   }

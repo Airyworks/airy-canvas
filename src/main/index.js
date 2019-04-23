@@ -1,5 +1,4 @@
 import * as PIXI from 'pixi.js'
-import PixiViewport from 'pixi-viewport'
 // import Zoom from './zoom'
 import MouseEvent from './mouse-event'
 
@@ -35,23 +34,8 @@ export default class {
     this.app.view.style.display = 'block'
     container.appendChild(this.app.view)
 
-    this.viewport = new PixiViewport({
-      screenWidth: window.innerWidth,
-      screenHeight: window.innerHeight,
-      worldWidth: 1000,
-      worldHeight: 1000,
-      interaction: this.app.renderer.plugins.interaction // the interaction module is important for wheel() to work properly when renderer.view is placed or scaled
-    })
-    this.app.stage.addChild(this.viewport)
-    this.viewport
-      .drag()
-      .pinch()
-      .wheel()
-      .decelerate()
-
     this.args = {
-      app: this.app,
-      viewport: this.viewport
+      app: this.app
     }
 
     this.renderHistory()
@@ -125,22 +109,13 @@ export default class {
     if (mouse.buttons % 2) {
       if (!this.pointerDownSwitch) {
         this.pointerDownSwitch = true
-        this.activePlugin.beginWithMouse({
-          app: this.app,
-          viewport: this.viewport
-        }, new MouseEvent(mouse, this.app.stage))
+        this.activePlugin.beginWithMouse(this.args, new MouseEvent(mouse, this.app.stage))
       } else {
-        this.activePlugin.moveWithMouse({
-          app: this.app,
-          viewport: this.viewport
-        }, new MouseEvent(mouse, this.app.stage))
+        this.activePlugin.moveWithMouse(this.args, new MouseEvent(mouse, this.app.stage))
       }
     } else if (this.pointerDownSwitch) {
       this.pointerDownSwitch = false
-      this.activePlugin.endWithMouse({
-        app: this.app,
-        viewport: this.viewport
-      }, new MouseEvent(mouse, this.app.stage))
+      this.activePlugin.endWithMouse(this.args, new MouseEvent(mouse, this.app.stage))
     }
   }
 
@@ -154,29 +129,20 @@ export default class {
         return
       }
       this.pointerDownSwitch = true
-      this.needUpdate = this.activePlugin.beginWithMouse({
-        app: this.app,
-        viewport: this.viewport
-      }, new MouseEvent(e, this.app.stage))
+      this.needUpdate = this.activePlugin.beginWithMouse(this.args, new MouseEvent(e, this.app.stage))
     })
     window.addEventListener('mousemove', e => {
       if (!this.pointerDownSwitch) {
         return
       }
-      this.needUpdate = this.activePlugin.moveWithMouse({
-        app: this.app,
-        viewport: this.viewport
-      }, new MouseEvent(e, this.app.stage))
+      this.needUpdate = this.activePlugin.moveWithMouse(this.args, new MouseEvent(e, this.app.stage))
     })
     window.addEventListener('mouseup', e => {
       if (!this.pointerDownSwitch) {
         return
       }
       this.pointerDownSwitch = false
-      this.needUpdate = this.activePlugin.endWithMouse({
-        app: this.app,
-        viewport: this.viewport
-      }, new MouseEvent(e, this.app.stage))
+      this.needUpdate = this.activePlugin.endWithMouse(this.args, new MouseEvent(e, this.app.stage))
     })
   }
 

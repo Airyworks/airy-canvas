@@ -11,29 +11,25 @@ export default class extends Basic {
     return cfg.name
   }
 
-  beginWithMouse ({ stage }, mouse) {
+  beginWithMouse ({ app }, mouse) {
     // console.log(stage.pivot)
-    // this.start = {
-    //   x: mouse.global.x,
-    //   y: mouse.global.y
-    // }
-    // this.position = {
-    //   x: stage.position.x,
-    //   y: stage.position.y
-    // }
+    this.start = {
+      x: mouse.global.x,
+      y: mouse.global.y
+    }
+    this.position = {
+      x: app.stage.position.x,
+      y: app.stage.position.y
+    }
     return false
   }
 
-  moveWithMouse ({ stage }, mouse) {
-    // stage.position.x = mouse.global.x - this.start.x + this.position.x
-    // stage.position.y = mouse.global.y - this.start.y + this.position.y
+  moveWithMouse ({ app }, mouse) {
+    app.stage.position.x = mouse.global.x - this.start.x + this.position.x
+    app.stage.position.y = mouse.global.y - this.start.y + this.position.y
     return true
   }
 
-  active ({ viewport }) {
-    viewport.pausePlugin('drag')
-  }
-  inactive ({ viewport }) {
-    viewport.resumePlugin('drag')
-  }
+  active ({ viewport }) {}
+  inactive ({ viewport }) {}
 }
