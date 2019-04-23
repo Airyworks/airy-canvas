@@ -1,6 +1,8 @@
 module.exports = {
   publicPath: './',
   chainWebpack: config => {
+    config.devServer
+      .disableHostCheck(true)
     config
       .entry('app')
       .clear()
