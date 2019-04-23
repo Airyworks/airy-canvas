@@ -1,4 +1,5 @@
 import * as PIXI from 'pixi.js'
+import FPS from 'yy-fps'
 import PixiViewport from 'pixi-viewport'
 // import Zoom from './zoom'
 import MouseEvent from './mouse-event'
@@ -18,6 +19,7 @@ export default class {
     this.plugins = plugins
     this._activePlugin = plugins[0]
     this.history = history
+    this.fps = new FPS({ side: 'bottom-left' })
     if (fluid) {
       this.app = new PIXI.Application(withPIXIDefaultOptions({
         autoResize: true,
@@ -36,10 +38,7 @@ export default class {
     container.appendChild(this.app.view)
 
     this.viewport = new PixiViewport({
-      screenWidth: window.innerWidth,
-      screenHeight: window.innerHeight,
-      worldWidth: 1000,
-      worldHeight: 1000,
+      passiveWheel: false,
       interaction: this.app.renderer.plugins.interaction // the interaction module is important for wheel() to work properly when renderer.view is placed or scaled
     })
     this.app.stage.addChild(this.viewport)
@@ -62,9 +61,15 @@ export default class {
     // })
     this.addEventListener()
 
+    this.lastUpdate = new Date().getTime()
+    this.interval = 1000 / (60 * 2)
+
     this.needUpdate = true
     requestAnimationFrame(timer => {
       this.update(timer)
+    })
+    PIXI.ticker.shared.add(() => {
+      this.fps.frame()
     })
   }
 
@@ -84,8 +89,13 @@ export default class {
   }
 
   update (timer) {
-    if (this.needUpdate) {
+    // if (this.needUpdate) {
+    //   this.needUpdate = false
+    //   this.app.render()
+    // }
+    if (new Date().getTime() >= this.lastUpdate + this.interval) {
       this.needUpdate = false
+      this.lastUpdate = new Date().getTime()
       this.app.render()
     }
     requestAnimationFrame(timer => {

@@ -7638,6 +7638,11 @@ timsort@^0.3.0:
   resolved "https://registry.yarnpkg.com/timsort/-/timsort-0.3.0.tgz#405411a8e7e6339fe64db9a234de11dc31e02bd4"
   integrity sha1-QFQRqOfmM5/mTbmiNN4R3DHgK9Q=
 
+tinycolor2@^1.4.1:
+  version "1.4.1"
+  resolved "http://registry.npm.taobao.org/tinycolor2/download/tinycolor2-1.4.1.tgz#f4fad333447bc0b07d4dc8e9209d8f39a8ac77e8"
+  integrity sha1-9PrTM0R7wLB9TcjpIJ2POaisd+g=
+
 tmp@^0.0.33:
   version "0.0.33"
   resolved "https://registry.yarnpkg.com/tmp/-/tmp-0.0.33.tgz#6d34335889768d21b2bcda0aa277ced3b1bfadf9"
@@ -8338,3 +8343,16 @@ yorkie@^2.0.0:
     is-ci "^1.0.10"
     normalize-path "^1.0.0"
     strip-indent "^2.0.0"
+
+yy-counter@^2.1.0:
+  version "2.1.0"
+  resolved "http://registry.npm.taobao.org/yy-counter/download/yy-counter-2.1.0.tgz#6c023c5a5f48a962cf34f234cbb26f64d8bd2c2e"
+  integrity sha1-bAI8Wl9IqWLPNPI0y7JvZNi9LC4=
+
+yy-fps@^1.0.0:
+  version "1.0.0"
+  resolved "http://registry.npm.taobao.org/yy-fps/download/yy-fps-1.0.0.tgz#d196282a3fb16c0a68185b57b0f5e99f1c601a78"
+  integrity sha1-0ZYoKj+xbApoGFtXsPXpnxxgGng=
+  dependencies:
+    tinycolor2 "^1.4.1"
+    yy-counter "^2.1.0"
