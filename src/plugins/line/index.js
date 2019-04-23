@@ -26,6 +26,7 @@ export default class extends Basic {
       y: local.y
     }
     stage.addChild(line)
+    return false
   }
 
   moveWithMouse (_, { local }) {
@@ -35,10 +36,12 @@ export default class extends Basic {
         .moveTo(0, 0)
         .lineTo(local.x - this.start.x, local.y - this.start.y)
     }
+    return true
   }
 
   endWithMouse () {
     this.activeLine = undefined
+    return false
   }
 
   render ({ data }) {

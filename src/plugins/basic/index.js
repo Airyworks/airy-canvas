@@ -13,9 +13,9 @@ export default class {
     return Component
   }
 
-  beginWithMouse (app, mouse) {}
-  moveWithMouse (app, mouse) {}
-  endWithMouse (app, mouse) {}
+  beginWithMouse (app, mouse) { return false }
+  moveWithMouse (app, mouse) { return false }
+  endWithMouse (app, mouse) { return false }
 
   render () {}
 }

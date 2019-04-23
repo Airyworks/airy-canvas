@@ -105,27 +105,38 @@ export default class {
   }
 
   addEventListener () {
+    this.app.view.oncontextmenu = () => false
     window.addEventListener('mousedown', e => {
+      if (e.button !== 0) { // only react to the left mouse button
+        return
+      }
       if (e.target !== this.app.view) {
         return
       }
       this.pointerDownSwitch = true
-      this.activePlugin.beginWithMouse(this.app, new MouseEvent(e, this.app.stage))
+      this.needUpdate = this.activePlugin.beginWithMouse(
+        this.app,
+        new MouseEvent(e, this.app.stage)
+      )
     })
     window.addEventListener('mousemove', e => {
       if (!this.pointerDownSwitch) {
         return
       }
-      this.needUpdate = true
-      this.activePlugin.moveWithMouse(this.app, new MouseEvent(e, this.app.stage))
+      this.needUpdate = this.activePlugin.moveWithMouse(
+        this.app,
+        new MouseEvent(e, this.app.stage)
+      )
     })
     window.addEventListener('mouseup', e => {
       if (!this.pointerDownSwitch) {
         return
       }
       this.pointerDownSwitch = false
-      this.needUpdate = true
-      this.activePlugin.endWithMouse(this.app, new MouseEvent(e, this.app.stage))
+      this.needUpdate = this.activePlugin.endWithMouse(
+        this.app,
+        new MouseEvent(e, this.app.stage)
+      )
     })
   }
 

@@ -21,10 +21,12 @@ export default class extends Basic {
       x: stage.position.x,
       y: stage.position.y
     }
+    return false
   }
 
   moveWithMouse ({ stage }, mouse) {
     stage.position.x = mouse.global.x - this.start.x + this.position.x
     stage.position.y = mouse.global.y - this.start.y + this.position.y
+    return true
   }
 }

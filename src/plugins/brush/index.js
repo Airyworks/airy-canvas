@@ -157,11 +157,13 @@ export default class extends Basic {
     this.ctrlPoints = []
     stage.addChild(line)
     this.updateLineByPath()
+    return false
   }
 
   moveWithMouse (_, mouse) {
     this.path.push(mouse.local)
     this.updateLineByPath()
+    return true
   }
 
   endWithMouse () {
@@ -172,6 +174,7 @@ export default class extends Basic {
     this.ctrlPoints = genControlPoints(this.path)
     this.updateLineByPath()
     console.log(this.stringify())
+    return true
   }
 
   updateLineByPath () {
