@@ -13,9 +13,12 @@ export default class {
     return Component
   }
 
-  beginWithMouse (app, mouse) { return false }
-  moveWithMouse (app, mouse) { return false }
-  endWithMouse (app, mouse) { return false }
+  beginWithMouse ({ app, viewport }, mouse) { return false }
+  moveWithMouse ({ app, viewport }, mouse) { return false }
+  endWithMouse ({ app, viewport }, mouse) { return false }
+
+  active ({ app, viewport }) { return false }
+  inactive ({ app, viewport }) { return false }
 
   render () {}
 }

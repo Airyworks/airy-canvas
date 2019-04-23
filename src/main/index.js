@@ -1,4 +1,6 @@
 import * as PIXI from 'pixi.js'
+import PixiViewport from 'pixi-viewport'
+// import Zoom from './zoom'
 import MouseEvent from './mouse-event'
 
 // remove PIXI banner from console if necessary
@@ -29,8 +31,28 @@ export default class {
       }))
     }
 
+    // canvas DOM operation
     this.app.view.style.display = 'block'
     container.appendChild(this.app.view)
+
+    this.viewport = new PixiViewport({
+      screenWidth: window.innerWidth,
+      screenHeight: window.innerHeight,
+      worldWidth: 1000,
+      worldHeight: 1000,
+      interaction: this.app.renderer.plugins.interaction // the interaction module is important for wheel() to work properly when renderer.view is placed or scaled
+    })
+    this.app.stage.addChild(this.viewport)
+    this.viewport
+      .drag()
+      .pinch()
+      .wheel()
+      .decelerate()
+
+    this.args = {
+      app: this.app,
+      viewport: this.viewport
+    }
 
     this.renderHistory()
 
@@ -53,7 +75,12 @@ export default class {
     // TODO:
     // check whether the parameter is a plugin
     // or change the plugin by the parameter as it's name
-    this._activePlugin = plugin
+    if (plugin !== this._activePlugin) {
+      this._activePlugin.active(this.args)
+      this._activePlugin = plugin
+      this._activePlugin.inactive(this.args)
+      // this._activePlugin.call(this._activePlugin.inactive, this.args)
+    }
   }
 
   update (timer) {
@@ -74,7 +101,11 @@ export default class {
   render (item) {
     for (const plugin of this.plugins) {
       if (item.renderer === plugin.name) {
-        this.app.stage.addChild(plugin.render(item))
+        // this.app.stage.addChild()
+        plugin.render({
+          app: this.app,
+          viewport: this.viewport
+        }, item)
       }
     }
   }
@@ -94,13 +125,22 @@ export default class {
     if (mouse.buttons % 2) {
       if (!this.pointerDownSwitch) {
         this.pointerDownSwitch = true
-        this.activePlugin.beginWithMouse(this.app, new MouseEvent(mouse, this.app.stage))
+        this.activePlugin.beginWithMouse({
+          app: this.app,
+          viewport: this.viewport
+        }, new MouseEvent(mouse, this.app.stage))
       } else {
-        this.activePlugin.moveWithMouse(this.app, new MouseEvent(mouse, this.app.stage))
+        this.activePlugin.moveWithMouse({
+          app: this.app,
+          viewport: this.viewport
+        }, new MouseEvent(mouse, this.app.stage))
       }
     } else if (this.pointerDownSwitch) {
       this.pointerDownSwitch = false
-      this.activePlugin.endWithMouse(this.app, new MouseEvent(mouse, this.app.stage))
+      this.activePlugin.endWithMouse({
+        app: this.app,
+        viewport: this.viewport
+      }, new MouseEvent(mouse, this.app.stage))
     }
   }
 
@@ -114,29 +154,29 @@ export default class {
         return
       }
       this.pointerDownSwitch = true
-      this.needUpdate = this.activePlugin.beginWithMouse(
-        this.app,
-        new MouseEvent(e, this.app.stage)
-      )
+      this.needUpdate = this.activePlugin.beginWithMouse({
+        app: this.app,
+        viewport: this.viewport
+      }, new MouseEvent(e, this.app.stage))
     })
     window.addEventListener('mousemove', e => {
       if (!this.pointerDownSwitch) {
         return
       }
-      this.needUpdate = this.activePlugin.moveWithMouse(
-        this.app,
-        new MouseEvent(e, this.app.stage)
-      )
+      this.needUpdate = this.activePlugin.moveWithMouse({
+        app: this.app,
+        viewport: this.viewport
+      }, new MouseEvent(e, this.app.stage))
     })
     window.addEventListener('mouseup', e => {
       if (!this.pointerDownSwitch) {
         return
       }
       this.pointerDownSwitch = false
-      this.needUpdate = this.activePlugin.endWithMouse(
-        this.app,
-        new MouseEvent(e, this.app.stage)
-      )
+      this.needUpdate = this.activePlugin.endWithMouse({
+        app: this.app,
+        viewport: this.viewport
+      }, new MouseEvent(e, this.app.stage))
     })
   }
 

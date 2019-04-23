@@ -12,21 +12,28 @@ export default class extends Basic {
   }
 
   beginWithMouse ({ stage }, mouse) {
-    console.log(stage.pivot)
-    this.start = {
-      x: mouse.global.x,
-      y: mouse.global.y
-    }
-    this.position = {
-      x: stage.position.x,
-      y: stage.position.y
-    }
+    // console.log(stage.pivot)
+    // this.start = {
+    //   x: mouse.global.x,
+    //   y: mouse.global.y
+    // }
+    // this.position = {
+    //   x: stage.position.x,
+    //   y: stage.position.y
+    // }
     return false
   }
 
   moveWithMouse ({ stage }, mouse) {
-    stage.position.x = mouse.global.x - this.start.x + this.position.x
-    stage.position.y = mouse.global.y - this.start.y + this.position.y
+    // stage.position.x = mouse.global.x - this.start.x + this.position.x
+    // stage.position.y = mouse.global.y - this.start.y + this.position.y
     return true
+  }
+
+  active ({ viewport }) {
+    viewport.pausePlugin('drag')
+  }
+  inactive ({ viewport }) {
+    viewport.resumePlugin('drag')
   }
 }

@@ -149,13 +149,13 @@ export default class extends Basic {
     return Component
   }
 
-  beginWithMouse ({ stage }, mouse) {
+  beginWithMouse ({ viewport }, mouse) {
     console.log(mouse)
     const line = new Graphics()
     this.activeLine = line
     this.path = [mouse.local]
     this.ctrlPoints = []
-    stage.addChild(line)
+    viewport.addChild(line)
     this.updateLineByPath()
     return false
   }
@@ -206,7 +206,7 @@ export default class extends Basic {
     return output
   }
 
-  render (data) {
+  render ({ viewport }, data) {
     const segment = data.split(';')
     const [color, width, alpha] = segment.slice(0, -1)
     const points = segment.slice(-1)[0].split(',').map(s => Number(s))
@@ -232,6 +232,7 @@ export default class extends Basic {
         line.bezierCurveTo(cp1.x, cp1.y, cp2.x, cp2.y, point.x, point.y)
       }
     })
+    viewport.addChild(line)
     return line
   }
 }
