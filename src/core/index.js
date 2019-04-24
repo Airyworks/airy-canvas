@@ -1,12 +1,16 @@
 import * as PIXI from 'pixi.js'
 import compose from 'koa-compose'
 import FPS from 'yy-fps'
-// import Zoom from './zoom'
+import Zoom from './zoom'
+import Logger from './logger'
 import MouseEvent from './mouse-event'
 import {
   activePluginSymbol,
   isAnimateSymbol
 } from './symbols'
+
+const logger = new Logger('core')
+window.PIXI = undefined
 
 // remove PIXI banner from console if necessary
 // PIXI.utils.skipHello()
@@ -41,16 +45,18 @@ export default class {
     container.appendChild(this.app.view)
 
     this.args = {
+      container,
       airy: this,
       app: this.app
     }
 
     this.renderHistory()
 
+    this.zoom = Zoom(this.args)
     this.pointerDownSwitch = false
     this.addEventListener()
-    this.animateMiddleware = []
-    this.animateCompose = compose(this.animateMiddleware)
+    this.middlewares = []
+    // this.compose = compose(this.middlewares)
 
     this.fps = new FPS()
 
@@ -86,7 +92,8 @@ export default class {
     this.fps.frame()
     if (this.isAnimate || this.needUpdate) {
       this.needUpdate = false
-      this.animateCompose(this.args)
+      // this.compose(this.args)
+      compose(this.middlewares)(this.args)
       this.app.render()
     }
     requestAnimationFrame(this.update.bind(this))
@@ -117,53 +124,61 @@ export default class {
 
   addEventListener () {
     this.app.view.oncontextmenu = () => false
-    window.addEventListener('mousedown', e => {
-      if (e.button !== 0) { // only react to the left mouse button
-        return
-      }
-      if (e.target !== this.app.view) {
-        return
-      }
-      this.pointerDownSwitch = true
-      this.needUpdate = this.activePlugin.beginWithMouse(this.args, new MouseEvent(e, this.app.stage))
-    })
-    window.addEventListener('mousemove', e => {
-      if (!this.pointerDownSwitch) {
-        return
-      }
-      this.needUpdate = this.activePlugin.moveWithMouse(this.args, new MouseEvent(e, this.app.stage))
-    })
-    window.addEventListener('mouseup', e => {
-      if (!this.pointerDownSwitch) {
-        return
-      }
-      this.pointerDownSwitch = false
-      this.needUpdate = this.activePlugin.endWithMouse(this.args, new MouseEvent(e, this.app.stage))
-    })
+    window.addEventListener('mousedown', this.mousedown.bind(this))
+    window.addEventListener('mousemove', this.mousemove.bind(this))
+    window.addEventListener('mouseup', this.mouseup.bind(this))
+    // this.unpanzoom = panzoom(document.body, this.zoom)
+  }
+
+  mousedown (e) {
+    if (e.button !== 0) { // only react to the left mouse button
+      return
+    }
+    if (e.target !== this.app.view) {
+      return
+    }
+    this.pointerDownSwitch = true
+    this.needUpdate = this.activePlugin.beginWithMouse(this.args, new MouseEvent(e, this.app.stage))
+  }
+
+  mousemove (e) {
+    if (!this.pointerDownSwitch) {
+      return
+    }
+    this.needUpdate = this.activePlugin.moveWithMouse(this.args, new MouseEvent(e, this.app.stage))
+  }
+
+  mouseup (e) {
+    if (!this.pointerDownSwitch) {
+      return
+    }
+    this.pointerDownSwitch = false
+    this.needUpdate = this.activePlugin.endWithMouse(this.args, new MouseEvent(e, this.app.stage))
   }
 
   destroy () {
+    window.removeEventListener('mousedown', this.mousedown)
+    window.removeEventListener('mousemove', this.mousemove)
+    window.removeEventListener('mouseup', this.mouseup)
     this.app.destroy()
     // TODO: release memory
   }
 
-  addAnimateMiddleware (func) {
-    if (this.animateMiddleware.indexOf(func) < 0) {
-      this.animateMiddleware.push(func)
-      this.animateCompose = compose(this.animateMiddleware)
+  use (func) {
+    if (this.middlewares.indexOf(func) < 0) {
+      this.middlewares.push(func)
     }
   }
 
-  removeAnimateMiddleware (func) {
-    const index = this.animateMiddleware.indexOf(func)
+  unuse (func) {
+    const index = this.middlewares.indexOf(func)
     if (index >= 0) {
-      this.animateMiddleware.splice(index, 1)
-      this.animateCompose = compose(this.animateMiddleware)
+      this.middlewares.splice(index, 1)
     }
   }
 
   ticker (delta) {
-    console.warn('function ticker() has been abandoned')
+    logger.warn('function ticker() has been abandoned')
 
     const mouse = this.app.renderer.plugins.interaction.mouse
 

@@ -1,5 +1,5 @@
 import { cloneDeep } from 'lodash'
-import AiryCanvas from '@/main/'
+import AiryCanvas from '@/core/'
 import defaultPlugins from '@/plugins/'
 
 const defaultOptions = {

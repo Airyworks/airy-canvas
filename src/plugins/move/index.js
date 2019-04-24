@@ -12,7 +12,6 @@ export default class extends Basic {
   }
 
   beginWithMouse ({ airy, app }, mouse) {
-    // console.log(stage.pivot)
     if (this.ani) this.clearAnimation(airy)
     airy.isAnimate = true
     this.prev = this.start = {
@@ -27,21 +26,24 @@ export default class extends Basic {
   }
 
   moveWithMouse ({ app }, mouse) {
-    this.speed = {
-      x: mouse.global.x - this.prev.x,
-      y: mouse.global.y - this.prev.y
+    if (this.prev) {
+      this.speed = {
+        x: mouse.global.x - this.prev.x,
+        y: mouse.global.y - this.prev.y
+      }
+      this.prev = {
+        x: mouse.global.x,
+        y: mouse.global.y
+      }
+      app.stage.position.x = mouse.global.x - this.start.x + this.position.x
+      app.stage.position.y = mouse.global.y - this.start.y + this.position.y
     }
-    this.prev = {
-      x: mouse.global.x,
-      y: mouse.global.y
-    }
-    app.stage.position.x = mouse.global.x - this.start.x + this.position.x
-    app.stage.position.y = mouse.global.y - this.start.y + this.position.y
-    return true
   }
 
   endWithMouse ({ airy, app }) {
-    this.ani = (_, next) => {
+    this.prev = undefined
+    airy.isAnimate = true
+    this.ani = ({ airy }, next) => {
       this.speed.x = this.speed.x * 0.85
       this.speed.y = this.speed.y * 0.85
       app.stage.position.x = this.speed.x + app.stage.position.x
@@ -53,14 +55,14 @@ export default class extends Basic {
       }
       next()
     }
-    airy.addAnimateMiddleware(this.ani)
+    airy.use(this.ani)
   }
 
   active ({ viewport }) {}
   inactive ({ viewport }) {}
 
   clearAnimation (airy) {
-    airy.removeAnimateMiddleware(this.ani)
+    airy.unuse(this.ani)
     this.ani = undefined
     airy.isAnimate = false
   }
