@@ -10,7 +10,7 @@ import {
 } from './symbols'
 
 const logger = new Logger('core')
-window.PIXI = undefined
+// window.PIXI = undefined
 
 // remove PIXI banner from console if necessary
 // PIXI.utils.skipHello()

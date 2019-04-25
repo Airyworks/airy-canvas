@@ -1,7 +1,7 @@
 import { Point } from 'pixi.js'
 
 export default class {
-  constructor (mouse, state) {
+  constructor (mouse, stage) {
     if (mouse.global) {
       this.global = mouse.global.clone()
     } else {
@@ -11,10 +11,12 @@ export default class {
       )
     }
 
+    console.log(this.global.x, stage.position.x, stage.pivot.x, stage.scale.x)
+
     // TODO: consider scaling
     this.local = new Point(
-      this.global.x - state.position.x,
-      this.global.y - state.position.y
+      this.global.x / stage.scale.x - stage.position.x,
+      this.global.y / stage.scale.y - stage.position.y
     )
 
     // TODO: more useful info

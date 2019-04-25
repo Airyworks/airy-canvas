@@ -42,6 +42,7 @@ export default class extends Basic {
 
   endWithMouse ({ airy, app }) {
     this.prev = undefined
+    if (!this.speed) return false
     airy.isAnimate = true
     this.ani = ({ airy }, next) => {
       this.speed.x = this.speed.x * 0.85
@@ -64,6 +65,7 @@ export default class extends Basic {
   clearAnimation (airy) {
     airy.unuse(this.ani)
     this.ani = undefined
+    this.speed = undefined
     airy.isAnimate = false
   }
 }
