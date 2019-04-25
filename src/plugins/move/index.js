@@ -45,8 +45,8 @@ export default class extends Basic {
     if (!this.speed) return false
     airy.isAnimate = true
     this.ani = ({ airy }, next) => {
-      this.speed.x = this.speed.x * 0.85
-      this.speed.y = this.speed.y * 0.85
+      this.speed.x = this.speed.x * 0.95
+      this.speed.y = this.speed.y * 0.95
       app.stage.position.x = this.speed.x + app.stage.position.x
       app.stage.position.y = this.speed.y + app.stage.position.y
       if (this.speed.x >= -1 && this.speed.x <= 1) this.speed.x = 0

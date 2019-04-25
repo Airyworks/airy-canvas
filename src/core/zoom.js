@@ -50,6 +50,7 @@ export default ({ container, airy, app }) => {
 
   function zoom (val, focus, e) {
     if (zoomAni) stop()
+    val = val > 5 ? 5 : val
     const start = app.stage.scale.x
     const diff = val - start
     const totalFrame = 10
