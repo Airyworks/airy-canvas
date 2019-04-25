@@ -7,7 +7,6 @@ export default ({ container, airy, app }) => {
   let mouse
 
   window.addEventListener('keydown', e => {
-    console.log(e)
     if ((e.ctrlKey || e.metaKey) &&
       (e.which === 61 ||
       e.which === 107 ||
@@ -19,11 +18,11 @@ export default ({ container, airy, app }) => {
       e.preventDefault()
       if (e.which === 187 || e.which === 107) {
         // zoom in
-        zoom(app.stage.scale.x * 1.1, false)
+        zoom(app.stage.scale.x * 4 / 3, false)
       }
       if (e.which === 189 || e.which === 109) {
         // zoom out
-        zoom(app.stage.scale.x * 0.9, false)
+        zoom(app.stage.scale.x * 3 / 4, false)
       }
       if (e.which === 48) {
         zoom(1, false)
@@ -34,7 +33,11 @@ export default ({ container, airy, app }) => {
   container.addEventListener('mousewheel', e => {
     if (e.ctrlKey) {
       e.preventDefault()
-      zoom(app.stage.scale.x - e.deltaY, true)
+      if (e.deltaY > 0) {
+        zoom(app.stage.scale.x * 3 / 4, true)
+      } else {
+        zoom(app.stage.scale.x * 4 / 3, true)
+      }
     }
   })
 

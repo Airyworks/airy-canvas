@@ -11,12 +11,10 @@ export default class {
       )
     }
 
-    console.log(this.global.x, stage.position.x, stage.pivot.x, stage.scale.x)
-
     // TODO: consider scaling
     this.local = new Point(
-      this.global.x / stage.scale.x - stage.position.x,
-      this.global.y / stage.scale.y - stage.position.y
+      (this.global.x - stage.position.x) / stage.scale.x + stage.pivot.x,
+      (this.global.y - stage.position.y) / stage.scale.y + stage.pivot.y
     )
 
     // TODO: more useful info
