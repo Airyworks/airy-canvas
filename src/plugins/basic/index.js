@@ -1,4 +1,5 @@
 import Component from './component'
+// import Setting from './setting'
 
 export default class {
   get name () {
@@ -8,6 +9,12 @@ export default class {
   get component () {
     return Component
   }
+
+  updateConfig (cfg) {}
+
+  // get setting () {
+  //   return Setting
+  // }
 
   beginWithMouse ({ airy, app }, mouse) { return false }
   moveWithMouse ({ airy, app }, mouse) { return false }

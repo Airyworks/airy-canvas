@@ -10,12 +10,21 @@
     <template
       v-for="(tool, key) in tools"
     >
-      <component
-        :key="key"
-        :is="tool.component"
-        :active="tool.name === active"
-        @focus="$emit('active', arguments[0])"
-      />
+      <div :key="key" class="airy-canvas-toolbar-item">
+        <component
+          :is="tool.component"
+          :active="tool.name === active"
+          @focus="focus"
+        />
+        <transition name="fade-left">
+          <component
+            v-if="tool.settingPanel && tool.name === active && openSetting"
+            :is="tool.settingPanel"
+            class="airy-canvas-tool-setting"
+            @update="updateCfg"
+          />
+        </transition>
+      </div>
     </template>
   </div>
 </template>
@@ -37,7 +46,8 @@ export default {
   },
   data () {
     return {
-      top: 0
+      top: 0,
+      openSetting: false
     }
   },
   mounted () {
@@ -50,6 +60,14 @@ export default {
   methods: {
     resize () {
       this.top = (window.innerHeight - this.$refs['toolbar-box'].offsetHeight) / 2
+    },
+    focus (name) {
+      this.openSetting = true
+      this.$emit('active', name)
+      console.log(this.tools.find(i => i.name === name))
+    },
+    updateCfg (cfg) {
+      this.$emit('updateConfig', this.active, cfg)
     }
   }
 }
@@ -61,4 +79,14 @@ export default {
   transition top 0.3s ease-in-out
   background #ffffff
   box-shadow 0 8px 16px 0 rgba(0, 0, 0, 0.12)
+  .airy-canvas-toolbar-item
+    position relative
+    .airy-canvas-tool-setting
+      position absolute
+      left 50px
+.fade-left-enter-active, .fade-left-leave-active
+  transition .5s ease-in-out
+.fade-left-enter .fade-left-leave-to
+  opacity 0
+  transform translateX(-50%)
 </style>

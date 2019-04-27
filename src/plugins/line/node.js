@@ -2,11 +2,12 @@ import BasicNode from '@/plugins/basic/node'
 import { Graphics, Point } from 'pixi.js'
 
 export default class extends BasicNode {
-  constructor ({ airy, stage }, { color }) {
+  constructor ({ airy, stage }, setting) {
+    console.log(setting)
     super()
     this.airy = airy
     this.stage = stage
-    this.color = color
+    this.setting = setting
     this.node = new Graphics()
     this.startPoint = new Point(0, 0)
   }
@@ -22,7 +23,7 @@ export default class extends BasicNode {
 
   move (x, y) {
     this.node.clear()
-    this.node.lineStyle(2, this.color)
+    this.node.lineStyle(this.setting.thick, this.setting.color)
       .moveTo(0, 0)
       .lineTo(x - this.startPoint.x, y - this.startPoint.y)
   }

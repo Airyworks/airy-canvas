@@ -71,14 +71,17 @@ export default {
     },
     activePlugin (activeName) {
       console.log('active', activeName)
-      for (const plugin of this.plugins) {
-        if (plugin.name === activeName) {
-          this.active = plugin
-          if (this.airyCanvas) {
-            this.airyCanvas.activePlugin = plugin
-          }
+      const plugin = this.plugins.find(p => p.name === activeName)
+      if (plugin) {
+        this.active = plugin
+        if (this.airyCanvas) {
+          this.airyCanvas.activePlugin = plugin
         }
       }
+    },
+    updateConfig (name, cfg) {
+      const plugin = this.plugins.find(p => p.name === name)
+      plugin.updateSetting(cfg)
     }
   }
 }

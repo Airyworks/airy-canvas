@@ -1,11 +1,19 @@
 import { Graphics } from 'pixi.js'
+import { cloneDeep } from 'lodash'
 import Basic from '@/plugins/basic/'
 import Node from './node'
 import Component from './component'
+import Setting from './setting'
+
+const defaultSetting = {
+  thick: 2,
+  color: 0x1099bb
+}
 
 export default class extends Basic {
   constructor () {
     super()
+    this.setting = cloneDeep(defaultSetting)
     this.color = 0x1099bb
     this.start = { x: 0, y: 0 }
   }
@@ -18,17 +26,18 @@ export default class extends Basic {
     return Component
   }
 
+  get settingPanel () {
+    return Setting
+  }
+
+  updateSetting (cfg) {
+    this.setting = Object.assign(this.setting, cfg)
+  }
+
   beginWithMouse ({ airy, stage }, { local }) {
-    const line = new Node({ airy, stage }, {
-      color: this.color
-    })
+    const line = new Node({ airy, stage }, this.setting)
     this.activeLine = line
-    console.log(line)
     line.start(local.x, local.y)
-    this.start = {
-      x: local.x,
-      y: local.y
-    }
     line.render()
     return false
   }

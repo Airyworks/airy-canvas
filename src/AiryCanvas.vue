@@ -9,11 +9,13 @@
       :tools="plugins"
       :active="active ? active.name : ''"
       @active="activePlugin"
+      @updateConfig="updateConfig"
     />
   </div>
 </template>
 
 <script>
+import 'roboto-fontface'
 import '@/assets/common.styl'
 import ToolBar from '@/components/ToolBar'
 import CanvasMixin from '@/mixins/CanvasMixin'
