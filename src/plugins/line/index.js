@@ -1,5 +1,6 @@
 import { Graphics } from 'pixi.js'
 import Basic from '@/plugins/basic/'
+import Node from './node'
 import Component from './component'
 
 export default class extends Basic {
@@ -17,24 +18,24 @@ export default class extends Basic {
     return Component
   }
 
-  beginWithMouse ({ stage }, { local }) {
-    const line = new Graphics()
+  beginWithMouse ({ airy, stage }, { local }) {
+    const line = new Node({ airy, stage }, {
+      color: this.color
+    })
     this.activeLine = line
-    line.position.set(local.x, local.y)
+    console.log(line)
+    line.start(local.x, local.y)
     this.start = {
       x: local.x,
       y: local.y
     }
-    stage.addChild(line)
+    line.render()
     return false
   }
 
   moveWithMouse (_, { local }) {
     if (this.activeLine) {
-      this.activeLine.clear()
-      this.activeLine.lineStyle(2, this.color)
-        .moveTo(0, 0)
-        .lineTo(local.x - this.start.x, local.y - this.start.y)
+      this.activeLine.move(local.x, local.y)
     }
     return true
   }

@@ -72,7 +72,7 @@ export default ({ container, airy, app }) => {
     app.stage.position = new Point((app.stage.pivot.x - pivot.x) * app.stage.scale.x + position.x,
       (app.stage.pivot.y - pivot.y) * app.stage.scale.y + position.y)
 
-    airy.isAnimate = true
+    // airy.isAnimate = true
     zoomAni = function () {
       frame++
       const scale = easeInOutQuad(frame / totalFrame) * diff + start

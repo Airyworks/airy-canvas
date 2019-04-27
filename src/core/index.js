@@ -6,7 +6,8 @@ import Logger from './logger'
 import MouseEvent from './mouse-event'
 import {
   activePluginSymbol,
-  isAnimateSymbol
+  isAnimateSymbol,
+  needUpdateSymbol
 } from './symbols'
 
 const logger = new Logger('core')
@@ -47,7 +48,8 @@ export default class {
     this.args = {
       container,
       airy: this,
-      app: this.app
+      app: this.app,
+      stage: this.app.stage
     }
 
     this.renderHistory()
@@ -60,7 +62,7 @@ export default class {
 
     this.fps = new FPS()
 
-    this.needUpdate = true
+    this[needUpdateSymbol] = true
     this[isAnimateSymbol] = false
     requestAnimationFrame(this.update.bind(this))
   }
@@ -80,12 +82,14 @@ export default class {
   }
 
   get isAnimate () {
-    return this[isAnimateSymbol]
+    return this.middlewares.length > 0
   }
-  set isAnimate (status) {
-    // status = true => enable render for 60FPS
-    // status = false => render for required frames only
-    this[isAnimateSymbol] = status
+
+  get needUpdate () {
+    return this[needUpdateSymbol]
+  }
+  set needUpdate (val) {
+    this[needUpdateSymbol] = val
   }
 
   update (timer) {

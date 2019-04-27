@@ -13,7 +13,7 @@ export default class extends Basic {
 
   beginWithMouse ({ airy, app }, mouse) {
     if (this.ani) this.clearAnimation(airy)
-    airy.isAnimate = true
+    // airy.isAnimate = true
     this.prev = this.start = {
       x: mouse.global.x,
       y: mouse.global.y
@@ -25,7 +25,7 @@ export default class extends Basic {
     return false
   }
 
-  moveWithMouse ({ app }, mouse) {
+  moveWithMouse ({ airy, app }, mouse) {
     if (this.prev) {
       this.speed = {
         x: mouse.global.x - this.prev.x,
@@ -37,13 +37,14 @@ export default class extends Basic {
       }
       app.stage.position.x = mouse.global.x - this.start.x + this.position.x
       app.stage.position.y = mouse.global.y - this.start.y + this.position.y
+      return true
     }
   }
 
   endWithMouse ({ airy, app }) {
     this.prev = undefined
     if (!this.speed) return false
-    airy.isAnimate = true
+    // airy.isAnimate = true
     this.ani = ({ airy }, next) => {
       this.speed.x = this.speed.x * 0.95
       this.speed.y = this.speed.y * 0.95
@@ -66,6 +67,6 @@ export default class extends Basic {
     airy.unuse(this.ani)
     this.ani = undefined
     this.speed = undefined
-    airy.isAnimate = false
+    // airy.isAnimate = false
   }
 }
