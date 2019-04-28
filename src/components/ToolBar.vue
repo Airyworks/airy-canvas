@@ -12,6 +12,7 @@
     >
       <div :key="key" class="airy-canvas-toolbar-item">
         <component
+          v-if="tool.show"
           :is="tool.component"
           :active="tool.name === active"
           @focus="focus"

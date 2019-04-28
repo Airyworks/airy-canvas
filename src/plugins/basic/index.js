@@ -10,6 +10,10 @@ export default class {
     return Component
   }
 
+  get show () {
+    return true
+  }
+
   updateConfig (cfg) {}
 
   // get setting () {

@@ -131,6 +131,7 @@ export default class {
     window.addEventListener('mousedown', this.mousedown.bind(this))
     window.addEventListener('mousemove', this.mousemove.bind(this))
     window.addEventListener('mouseup', this.mouseup.bind(this))
+    window.addEventListener('paste', this.paste.bind(this))
     // this.unpanzoom = panzoom(document.body, this.zoom)
   }
 
@@ -158,6 +159,10 @@ export default class {
     }
     this.pointerDownSwitch = false
     this.needUpdate = this.activePlugin.endWithMouse(this.args, new MouseEvent(e, this.app.stage))
+  }
+
+  paste (e) {
+    console.log(e)
   }
 
   destroy () {
