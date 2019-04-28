@@ -1,5 +1,5 @@
 import { Point } from 'pixi.js'
-import { easeInOutQuad } from '@/utils/ease'
+import { linear as animateFunction } from '@/utils/ease'
 import MouseEvent from './mouse-event'
 
 export default ({ container, airy, app }) => {
@@ -75,7 +75,7 @@ export default ({ container, airy, app }) => {
     // airy.isAnimate = true
     zoomAni = function () {
       frame++
-      const scale = easeInOutQuad(frame / totalFrame) * diff + start
+      const scale = animateFunction(frame / totalFrame) * diff + start
       app.stage.scale.x = scale
       app.stage.scale.y = scale
       if (frame >= totalFrame) {
