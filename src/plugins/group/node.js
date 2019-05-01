@@ -4,7 +4,8 @@ class BasicNode {
   constructor (id) {
     this.uuid = uuidv1()
     this.id = id || this.uuid
-    this.type = undefined
+    this.type = 'basic-group'
+    this.children = []
     this.parent = undefined
   }
 
@@ -21,6 +22,7 @@ class BasicNode {
   }
 
   createNode () {}
+
   mountNode () {}
 }
 

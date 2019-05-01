@@ -1,6 +1,7 @@
 import * as PIXI from 'pixi.js'
 import compose from 'koa-compose'
 import FPS from 'yy-fps'
+import Store from '@/store'
 import Zoom from './zoom'
 import Logger from './logger'
 import MouseEvent from './mouse-event'
@@ -40,6 +41,7 @@ export default class {
         backgroundColor: 0x1099bb
       }))
     }
+    this.store = new Store()
 
     // canvas DOM operation
     this.app.view.style.display = 'block'
@@ -49,7 +51,8 @@ export default class {
       container,
       airy: this,
       app: this.app,
-      stage: this.app.stage
+      stage: this.app.stage,
+      store: this.store
     }
 
     this.renderHistory()

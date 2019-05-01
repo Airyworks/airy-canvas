@@ -34,11 +34,11 @@ export default class extends Basic {
     this.setting = Object.assign(this.setting, cfg)
   }
 
-  beginWithMouse ({ airy, stage }, { local }) {
+  beginWithMouse ({ airy, stage, store }, { local }) {
     const line = new Node({ airy, stage }, this.setting)
+    store.addNode(line)
     this.activeLine = line
     line.start(local.x, local.y)
-    line.render()
     return false
   }
 

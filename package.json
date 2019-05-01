@@ -21,6 +21,7 @@
     "pixi-viewport": "^3.23.2",
     "pixi.js": "^4.8.7",
     "roboto-fontface": "^0.10.0",
+    "uuid": "^3.3.2",
     "vue": "^2.6.6",
     "yy-fps": "^1.0.0"
   },
