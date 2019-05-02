@@ -8,18 +8,6 @@ class BasicNode {
     this.parent = undefined
   }
 
-  appendChild (node) {
-    this.children.push(node)
-    node.parent = this
-  }
-
-  removeChild (node) {
-    const index = this.children.indexOf(node)
-    if (index >= 0) {
-      this.children.splice(index, 1)
-    }
-  }
-
   createNode () {}
   mountNode () {}
 }

@@ -1,4 +1,5 @@
 import Component from './component'
+import { Container } from 'pixi.js'
 // import Setting from './setting'
 
 export default class {
@@ -27,5 +28,7 @@ export default class {
   active ({ app, viewport }) { return false }
   inactive ({ app, viewport }) { return false }
 
-  render () {}
+  render (container) {
+    container.addChild(this.node || new Container())
+  }
 }

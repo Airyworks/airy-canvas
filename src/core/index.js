@@ -41,7 +41,10 @@ export default class {
         backgroundColor: 0x1099bb
       }))
     }
-    this.store = new Store()
+    this.store = new Store({
+      app: this.app,
+      stage: this.app.stage
+    })
 
     // canvas DOM operation
     this.app.view.style.display = 'block'

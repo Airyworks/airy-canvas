@@ -11,16 +11,13 @@ export default class extends BasicNode {
     this.startPoint = new Point(0, 0)
   }
 
-  render () {
-    this.stage.addChild(this.node)
-  }
-
   start (x, y) {
     this.startPoint = new Point(x, y)
     this.node.position = this.startPoint
   }
 
-  move (x, y) {
+  move ({ x, y }) {
+    console.log(x, y)
     this.node.clear()
     this.node.lineStyle(this.setting.thick, this.setting.color)
       .moveTo(0, 0)

@@ -42,9 +42,12 @@ export default class extends Basic {
     return false
   }
 
-  moveWithMouse (_, { local }) {
+  moveWithMouse ({ store }, { local }) {
     if (this.activeLine) {
-      this.activeLine.move(local.x, local.y)
+      store.commit(this.activeLine, 'move', {
+        x: local.x,
+        y: local.y
+      })
     }
     return true
   }
