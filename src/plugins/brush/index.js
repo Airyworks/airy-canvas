@@ -1,6 +1,7 @@
 import { Graphics } from 'pixi.js'
 import Basic from '@/plugins/basic/'
 import Component from './component'
+import Node from './node'
 
 const toFixed = number => {
   return number.toFixed(2).replace(/\.?0+$/, '')
@@ -128,6 +129,7 @@ const genControlPoints = points => {
 
   return controlPoints
 }
+
 export default class extends Basic {
   constructor () {
     super()
@@ -136,7 +138,7 @@ export default class extends Basic {
     this.color = 0x1099bb
     this.alpha = 1
 
-    this.activeLine = null
+    this.activeNode = null
     this.path = []
     this.ctrlPoints = []
   }
@@ -149,49 +151,56 @@ export default class extends Basic {
     return Component
   }
 
-  beginWithMouse ({ app }, mouse) {
-    console.log(mouse)
-    const line = new Graphics()
-    this.activeLine = line
+  beginWithMouse ({ airy, stage, store }, mouse) {
+    // const line = new Graphics()
+    // this.activeNode = line
+    // this.path = [mouse.local]
+    // this.ctrlPoints = []
+    // app.stage.addChild(line)
+    // this.updateLineByPath()
+    // this.node = new Node()
+    // return false
+    const node = new Node({ airy, stage }, this.setting)
+    store.addNode(node)
+    this.activeNode = node
     this.path = [mouse.local]
     this.ctrlPoints = []
-    app.stage.addChild(line)
-    this.updateLineByPath()
+    this.updateLineByPath(store)
     return false
   }
 
-  moveWithMouse (_, mouse) {
+  moveWithMouse ({ store }, mouse) {
     this.path.push(mouse.local)
-    this.updateLineByPath()
+    this.updateLineByPath(store)
     return true
   }
 
-  endWithMouse () {
+  endWithMouse ({ store }) {
     if (!this.path.length) {
       return
     }
     this.path = simplify(this.path)
     this.ctrlPoints = genControlPoints(this.path)
-    this.updateLineByPath()
+    this.updateLineByPath(store)
     console.log(this.stringify())
     return true
   }
 
-  updateLineByPath () {
+  updateLineByPath (store) {
     if (!this.path.length) {
       return
     }
-    this.activeLine.clear()
-    this.activeLine.lineStyle(this.width, this.color, this.alpha, 0.5)
+    store.commit(this.activeNode, 'clear')
+    store.commit(this.activeNode, 'lineStyle', [this.width, this.color, this.alpha, 0.5])
     this.path.forEach((point, index) => {
       if (!index) {
-        this.activeLine.moveTo(point.x, point.y)
+        store.commit(this.activeNode, 'moveTo', [point.x, point.y])
       } else if (this.ctrlPoints.length) {
         const cp1 = this.ctrlPoints[index - 1].right
         const cp2 = this.ctrlPoints[index].left
-        this.activeLine.bezierCurveTo(cp1.x, cp1.y, cp2.x, cp2.y, point.x, point.y)
+        store.commit(this.activeNode, 'bezierCurveTo', [cp1.x, cp1.y, cp2.x, cp2.y, point.x, point.y])
       } else {
-        this.activeLine.lineTo(point.x, point.y)
+        store.commit(this.activeNode, 'lineTo', [point.x, point.y])
       }
     })
   }

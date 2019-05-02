@@ -23,7 +23,11 @@ class Store {
   }
 
   commit (el, action, payload) {
-    el[action](payload)
+    if (payload) {
+      el[action](payload)
+    } else {
+      el[action]()
+    }
   }
 }
 
