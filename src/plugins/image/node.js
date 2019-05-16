@@ -3,8 +3,7 @@ import { Graphics, Point } from 'pixi.js'
 
 export default class extends BasicNode {
   constructor ({ airy, stage }, setting) {
-    console.log(setting)
-    super()
+    super(airy)
     this.airy = airy
     this.stage = stage
     this.setting = setting

@@ -1,9 +1,9 @@
-import Basic from '@/plugins/basic/node'
 import { Container } from 'pixi.js'
+import Basic from '@/plugins/basic/node'
 
 class Root extends Basic {
-  constructor (stage) {
-    super()
+  constructor ({ stage, airy }) {
+    super(airy)
     this.type = 'root'
     this.node = new Container()
     stage.addChild(this.node)

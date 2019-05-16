@@ -3,7 +3,7 @@ import { Graphics, Point } from 'pixi.js'
 
 export default class extends BasicNode {
   constructor ({ airy, stage }, setting) {
-    super()
+    super(airy)
     this.airy = airy
     this.stage = stage
     this.setting = setting
@@ -17,7 +17,6 @@ export default class extends BasicNode {
   }
 
   move ({ x, y }) {
-    console.log(x, y)
     this.node.clear()
     this.node.lineStyle(this.setting.thick, this.setting.color)
       .moveTo(0, 0)

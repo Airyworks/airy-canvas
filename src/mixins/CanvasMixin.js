@@ -49,11 +49,14 @@ export default {
   },
   created () {
     this.plugins = defaultPlugins.concat(this._options.plugins).map(Plugin => new Plugin())
-    this.activePlugin('basic-move')
   },
   mounted () {
     this.box = this.$refs['airy-box']
     this.airyCanvas = new AiryCanvas(this.box, this._options, this.plugins, cloneDeep(this.data))
+
+    this.active = 'basic-move'
+    this.activePlugin(this.active)
+
     window.addEventListener('resize', this.resize)
     this.resize()
   },
@@ -70,7 +73,6 @@ export default {
       this.plugins.push(new Plugin())
     },
     activePlugin (activeName) {
-      console.log('active', activeName)
       const plugin = this.plugins.find(p => p.name === activeName)
       if (plugin) {
         this.active = plugin

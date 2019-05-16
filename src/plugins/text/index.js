@@ -5,7 +5,7 @@ import Component from './component'
 import Setting from './setting'
 
 const defaultSetting = {
-  fill: '#ffffff',
+  fill: '#000000',
   breakWords: true,
   fontFamily: 'sans-serif',
   fontSize: 24,
@@ -43,12 +43,12 @@ export default class extends Basic {
     this.setting = Object.assign(this.setting, cfg)
   }
 
-  beginWithMouse ({ airy, stage }, { local }) {
-    console.log(local)
+  beginWithMouse ({ airy, stage, store }, { local }) {
+    console.log('create text')
     const text = new Node({ airy, stage }, this.setting)
-    text.position(local)
-    text.edit()
-    text.render()
+    // text.position(local)
+    store.addNode(text)
+    store.commit(text, 'position', local)
     return true
   }
 
@@ -57,4 +57,14 @@ export default class extends Basic {
   endWithMouse () {}
 
   render ({ data }) {}
+
+  // stringify () {
+  //   let output = `<BRUSH>${this.color};${this.width.toFixed(2)};${this.alpha.toFixed(2)};`
+  //   output += toFixed(this.path[0].x) + ',' + toFixed(this.path[0].y)
+  //   this.path.reduce((last, point) => {
+  //     output += `,${toFixed(point.x - last.x)},${toFixed(point.y - last.y)}`
+  //     return point
+  //   }, this.path[0])
+  //   return output
+  // }
 }

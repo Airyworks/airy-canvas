@@ -3,7 +3,7 @@ import { Text } from 'pixi.js'
 
 export default class extends BasicNode {
   constructor ({ airy, stage }, setting) {
-    super()
+    super(airy)
     this.airy = airy
     this.stage = stage
     this.setting = setting
@@ -11,13 +11,13 @@ export default class extends BasicNode {
     this.node = new Text('Rich text with a lot of options and across multiple lines', this.setting)
   }
 
-  render () {
-    this.stage.addChild(this.node)
-  }
+  // render () {
+  //   this.stage.addChild(this.node)
+  // }
 
   position (local) {
     this.node.x = local.x
-    this.node.y = local.y
+    this.node.y = local.y - this.node.height / 2
   }
 
   edit () {}

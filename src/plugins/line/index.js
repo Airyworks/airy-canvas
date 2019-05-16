@@ -36,7 +36,7 @@ export default class extends Basic {
 
   beginWithMouse ({ airy, stage, store }, { local }) {
     const line = new Node({ airy, stage }, this.setting)
-    store.addNode(line)
+    // store.addNode(Node, this.setting)
     this.activeLine = line
     line.start(local.x, local.y)
     return false

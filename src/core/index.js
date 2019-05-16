@@ -62,7 +62,13 @@ export default class {
 
     this.zoom = Zoom(this.args)
     this.pointerDownSwitch = false
-    this.addEventListener()
+    this.enableEvent = false
+    this.listener = {
+      mousedown: this.mousedown.bind(this),
+      mousemove: this.mousemove.bind(this),
+      mouseup: this.mouseup.bind(this)
+    }
+    this.initEventListener()
     this.middlewares = []
     // this.compose = compose(this.middlewares)
 
@@ -80,10 +86,18 @@ export default class {
     // TODO:
     // check whether the parameter is a plugin
     // or change the plugin by the parameter as it's name
+    console.log(plugin.name, this[activePluginSymbol].name)
     if (plugin !== this[activePluginSymbol]) {
       this[activePluginSymbol].active(this.args)
       this[activePluginSymbol] = plugin
       this[activePluginSymbol].inactive(this.args)
+      if (plugin.name === 'basic-select') {
+        // remove event handler
+        this.removeEventListener()
+      } else {
+        // add event handler
+        this.addEventListener()
+      }
     }
   }
 
@@ -100,8 +114,8 @@ export default class {
 
   update (timer) {
     this.fps.frame()
-    if (this.isAnimate || this.needUpdate) {
-      this.needUpdate = false
+    if (this.isAnimate || this[needUpdateSymbol]) {
+      this[needUpdateSymbol] = false
       // this.compose(this.args)
       compose(this.middlewares)(this.args)
       this.app.render()
@@ -132,13 +146,28 @@ export default class {
     }
   }
 
-  addEventListener () {
+  initEventListener () {
     this.app.view.oncontextmenu = () => false
-    window.addEventListener('mousedown', this.mousedown.bind(this))
-    window.addEventListener('mousemove', this.mousemove.bind(this))
-    window.addEventListener('mouseup', this.mouseup.bind(this))
     window.addEventListener('paste', this.paste.bind(this))
-    // this.unpanzoom = panzoom(document.body, this.zoom)
+    this.addEventListener()
+  }
+
+  addEventListener () {
+    if (!this.enableEvent) {
+      this.enableEvent = true
+      window.addEventListener('mousedown', this.listener.mousedown)
+      window.addEventListener('mousemove', this.listener.mousemove)
+      window.addEventListener('mouseup', this.listener.mouseup)
+    }
+  }
+
+  removeEventListener () {
+    if (this.enableEvent) {
+      this.enableEvent = false
+      window.removeEventListener('mousedown', this.listener.mousedown)
+      window.removeEventListener('mousemove', this.listener.mousemove)
+      window.removeEventListener('mouseup', this.listener.mouseup)
+    }
   }
 
   mousedown (e) {
@@ -172,9 +201,7 @@ export default class {
   }
 
   destroy () {
-    window.removeEventListener('mousedown', this.mousedown)
-    window.removeEventListener('mousemove', this.mousemove)
-    window.removeEventListener('mouseup', this.mouseup)
+    this.removeEventListener()
     this.app.destroy()
     // TODO: release memory
   }
