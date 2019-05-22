@@ -49,6 +49,7 @@ export default class extends Basic {
     // text.position(local)
     store.addNode(text)
     store.commit(text, 'position', local)
+    console.log('before return')
     return true
   }
 

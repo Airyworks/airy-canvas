@@ -1,6 +1,8 @@
 import * as PIXI from 'pixi.js'
 import compose from 'koa-compose'
 import FPS from 'yy-fps'
+import jss from 'jss'
+import camelCase from 'jss-plugin-camel-case'
 import Store from '@/store'
 import Zoom from './zoom'
 import Logger from './logger'
@@ -10,6 +12,8 @@ import {
   isAnimateSymbol,
   needUpdateSymbol
 } from './symbols'
+
+jss.use(camelCase())
 
 const logger = new Logger('core')
 // window.PIXI = undefined
@@ -25,6 +29,8 @@ const withPIXIDefaultOptions = options => Object.assign({
 
 export default class {
   constructor (container, { fluid, width, height }, plugins, history) {
+    this.container = container
+    this.jss = jss
     this.fluid = fluid
     this.plugins = plugins
     this[activePluginSymbol] = plugins[0]
@@ -86,7 +92,6 @@ export default class {
     // TODO:
     // check whether the parameter is a plugin
     // or change the plugin by the parameter as it's name
-    console.log(plugin.name, this[activePluginSymbol].name)
     if (plugin !== this[activePluginSymbol]) {
       this[activePluginSymbol].active(this.args)
       this[activePluginSymbol] = plugin
@@ -114,8 +119,8 @@ export default class {
 
   update (timer) {
     this.fps.frame()
-    if (this.isAnimate || this[needUpdateSymbol]) {
-      this[needUpdateSymbol] = false
+    if (this.isAnimate || this.needUpdate) {
+      this.needUpdate = false
       // this.compose(this.args)
       compose(this.middlewares)(this.args)
       this.app.render()
@@ -178,14 +183,14 @@ export default class {
       return
     }
     this.pointerDownSwitch = true
-    this.needUpdate = this.activePlugin.beginWithMouse(this.args, new MouseEvent(e, this.app.stage))
+    this.needUpdate = this.needUpdate || this.activePlugin.beginWithMouse(this.args, new MouseEvent(e, this.app.stage))
   }
 
   mousemove (e) {
     if (!this.pointerDownSwitch) {
       return
     }
-    this.needUpdate = this.activePlugin.moveWithMouse(this.args, new MouseEvent(e, this.app.stage))
+    this.needUpdate = this.needUpdate || this.activePlugin.moveWithMouse(this.args, new MouseEvent(e, this.app.stage))
   }
 
   mouseup (e) {
@@ -193,7 +198,7 @@ export default class {
       return
     }
     this.pointerDownSwitch = false
-    this.needUpdate = this.activePlugin.endWithMouse(this.args, new MouseEvent(e, this.app.stage))
+    this.needUpdate = this.needUpdate || this.activePlugin.endWithMouse(this.args, new MouseEvent(e, this.app.stage))
   }
 
   paste (e) {

@@ -21,4 +21,26 @@ export default class extends BasicNode {
   }
 
   edit () {}
+
+  onclick (e) {
+    const editor = document.createElement('p')
+    editor.textContent = this.node.text
+    const { container } = this.airy
+    // console.log(container, editor, this.node)
+    // console.log(e.data.global.x / this.airy.app.screen.width,
+    //   e.data.global.y / this.airy.app.screen.height)
+    // console.log(this, this.airy, )
+    const location = this.getGlobalLocation()
+    console.log(location)
+    const styles = {
+      editor: {
+        position: 'absolute',
+        left: `${location.x}px`,
+        top: `${location.y}px`
+      }
+    }
+    const { classes } = this.airy.jss.createStyleSheet(styles).attach()
+    editor.classList.add(classes.editor)
+    container.appendChild(editor)
+  }
 }

@@ -16,6 +16,8 @@
     "@types/lodash": "^4.14.123",
     "@types/pixi.js": "^4.8.7",
     "@types/vue": "^2.0.0",
+    "jss": "^9.8.7",
+    "jss-plugin-camel-case": "^10.0.0-alpha.7",
     "koa-compose": "^4.1.0",
     "lodash": "^4.17.11",
     "pixi-viewport": "^3.23.2",

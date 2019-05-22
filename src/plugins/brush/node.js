@@ -54,9 +54,7 @@ export default class extends BasicNode {
   }
 
   hitArea () {
-    // this.node.hitArea = new Rectangle(this.node.x, this.node.y, this.node.width, this.node.height)
-    // this.node.hitArea = new Rectangle(this.node.x, this.node.y, this.node.width, this.node.height)
-    console.log(this.area)
+    // graphics require hit area to be selected
     this.node.hitArea = new Rectangle(this.area.minx, this.area.miny,
       this.area.maxx - this.area.minx, this.area.maxy - this.area.miny)
   }

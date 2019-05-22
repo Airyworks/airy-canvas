@@ -29,6 +29,7 @@ class Store {
     } else {
       el[action]()
     }
+    console.log('commit finish')
   }
 
   focus (uuid) {

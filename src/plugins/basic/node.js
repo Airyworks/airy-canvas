@@ -1,4 +1,5 @@
 import uuidv1 from 'uuid/v1'
+import { Point } from 'pixi.js'
 import Transform from './transform'
 
 class BasicNode {
@@ -33,13 +34,21 @@ class BasicNode {
     }
   }
 
-  clickEvent () {
-    console.log('click', this.uuid)
+  clickEvent (e) {
     this.airy.store.focus(this.uuid)
-    this.onclick()
+    this.onclick(e)
   }
 
-  onclick () {}
+  onclick (e) {}
+
+  getGlobalLocation () {
+    const { x, y } = this.node
+    const stage = this.airy.app.stage
+    return new Point(
+      (x - stage.pivot.x) * stage.scale.x + stage.position.x,
+      (y - stage.pivot.y) * stage.scale.y + stage.position.y
+    )
+  }
 }
 
 export default BasicNode
