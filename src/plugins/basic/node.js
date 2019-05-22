@@ -1,6 +1,6 @@
 import uuidv1 from 'uuid/v1'
 import { Point } from 'pixi.js'
-import Transform from './transform'
+import Transform from './transform-dom'
 
 class BasicNode {
   constructor (airy) {
@@ -35,11 +35,14 @@ class BasicNode {
   }
 
   clickEvent (e) {
+    e.stopPropagation()
     this.airy.store.focus(this.uuid)
     this.onclick(e)
   }
 
   onclick (e) {}
+
+  unfocus () {}
 
   getGlobalLocation () {
     const { x, y } = this.node

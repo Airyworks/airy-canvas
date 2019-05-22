@@ -47,7 +47,10 @@ export default class {
         backgroundColor: 0x1099bb
       }))
     }
+    this.app.renderer.plugins.interaction.autoPreventDefault = true
+
     this.store = new Store({
+      airy: this,
       app: this.app,
       stage: this.app.stage
     })
@@ -96,13 +99,13 @@ export default class {
       this[activePluginSymbol].active(this.args)
       this[activePluginSymbol] = plugin
       this[activePluginSymbol].inactive(this.args)
-      if (plugin.name === 'basic-select') {
-        // remove event handler
-        this.removeEventListener()
-      } else {
-        // add event handler
-        this.addEventListener()
-      }
+      // if (plugin.name === 'basic-select') {
+      //   // remove event handler
+      //   this.removeEventListener()
+      // } else {
+      //   // add event handler
+      //   this.addEventListener()
+      // }
     }
   }
 
@@ -153,29 +156,30 @@ export default class {
 
   initEventListener () {
     this.app.view.oncontextmenu = () => false
-    window.addEventListener('paste', this.paste.bind(this))
+    this.container.addEventListener('paste', this.paste.bind(this))
     this.addEventListener()
   }
 
   addEventListener () {
     if (!this.enableEvent) {
       this.enableEvent = true
-      window.addEventListener('mousedown', this.listener.mousedown)
-      window.addEventListener('mousemove', this.listener.mousemove)
-      window.addEventListener('mouseup', this.listener.mouseup)
+      this.container.addEventListener('mousedown', this.listener.mousedown)
+      this.container.addEventListener('mousemove', this.listener.mousemove)
+      this.container.addEventListener('mouseup', this.listener.mouseup)
     }
   }
 
   removeEventListener () {
     if (this.enableEvent) {
       this.enableEvent = false
-      window.removeEventListener('mousedown', this.listener.mousedown)
-      window.removeEventListener('mousemove', this.listener.mousemove)
-      window.removeEventListener('mouseup', this.listener.mouseup)
+      this.container.removeEventListener('mousedown', this.listener.mousedown)
+      this.container.removeEventListener('mousemove', this.listener.mousemove)
+      this.container.removeEventListener('mouseup', this.listener.mouseup)
     }
   }
 
   mousedown (e) {
+    const plugin = this.activePlugin
     if (e.button !== 0) { // only react to the left mouse button
       return
     }
@@ -183,22 +187,31 @@ export default class {
       return
     }
     this.pointerDownSwitch = true
-    this.needUpdate = this.needUpdate || this.activePlugin.beginWithMouse(this.args, new MouseEvent(e, this.app.stage))
+    if (plugin.name !== 'basic-select') {
+      this.store.unfocus()
+      this.needUpdate = this.needUpdate || plugin.beginWithMouse(this.args, new MouseEvent(e, this.app.stage))
+    }
   }
 
   mousemove (e) {
+    const plugin = this.activePlugin
     if (!this.pointerDownSwitch) {
       return
     }
-    this.needUpdate = this.needUpdate || this.activePlugin.moveWithMouse(this.args, new MouseEvent(e, this.app.stage))
+    if (plugin.name !== 'basic-select') {
+      this.needUpdate = this.needUpdate || plugin.moveWithMouse(this.args, new MouseEvent(e, this.app.stage))
+    }
   }
 
   mouseup (e) {
+    const plugin = this.activePlugin
     if (!this.pointerDownSwitch) {
       return
     }
     this.pointerDownSwitch = false
-    this.needUpdate = this.needUpdate || this.activePlugin.endWithMouse(this.args, new MouseEvent(e, this.app.stage))
+    if (plugin.name !== 'basic-select') {
+      this.needUpdate = this.needUpdate || plugin.endWithMouse(this.args, new MouseEvent(e, this.app.stage))
+    }
   }
 
   paste (e) {

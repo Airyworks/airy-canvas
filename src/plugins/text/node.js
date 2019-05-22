@@ -9,6 +9,11 @@ export default class extends BasicNode {
     this.setting = setting
 
     this.node = new Text('Rich text with a lot of options and across multiple lines', this.setting)
+    this.editor = document.createElement('p')
+    this.editor.addEventListener('mousedown', (e) => {
+      console.log('editor mousedown')
+      e.stopPropagation()
+    })
   }
 
   // render () {
@@ -23,24 +28,35 @@ export default class extends BasicNode {
   edit () {}
 
   onclick (e) {
-    const editor = document.createElement('p')
-    editor.textContent = this.node.text
+    this.editor.textContent = this.node.text
     const { container } = this.airy
     // console.log(container, editor, this.node)
     // console.log(e.data.global.x / this.airy.app.screen.width,
     //   e.data.global.y / this.airy.app.screen.height)
     // console.log(this, this.airy, )
     const location = this.getGlobalLocation()
-    console.log(location)
     const styles = {
       editor: {
         position: 'absolute',
         left: `${location.x}px`,
-        top: `${location.y}px`
+        top: `${location.y}px`,
+        margin: 0,
+        whiteSpace: 'nowrap',
+        fontSize: `${this.setting.fontSize * this.airy.app.stage.scale.y}px`,
+        fontStyle: this.setting.fontStyle,
+        lineHeight: `${this.setting.lineHeight * this.airy.app.stage.scale.y}px`,
+        color: this.setting.fill,
+        fontFamily: this.setting.fontFamily
       }
     }
+    this.editor.contentEditable = 'true'
     const { classes } = this.airy.jss.createStyleSheet(styles).attach()
-    editor.classList.add(classes.editor)
-    container.appendChild(editor)
+    this.editor.className = classes.editor
+    container.appendChild(this.editor)
+    this.node.visible = false
+  }
+
+  unfocus () {
+    console.log('text node unfocus', this.airy.store)
   }
 }

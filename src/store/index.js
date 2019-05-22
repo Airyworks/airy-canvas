@@ -6,6 +6,7 @@ class Store {
     this.root = new Root({ stage, airy })
     this[uuidDictSymbol] = {}
     this[idDictSymbol] = {}
+    this.focusNode = undefined
   }
 
   addNode (node) {
@@ -35,7 +36,17 @@ class Store {
   focus (uuid) {
     const node = this.findByUuid(uuid)
     if (node) {
+      this.unfocus()
       node.focus = true
+      this.focusNode = node
+    }
+  }
+
+  unfocus () {
+    console.log(this.focusNode)
+    if (this.focusNode) {
+      this.focusNode.unfocus()
+      this.focusNode = undefined
     }
   }
 }

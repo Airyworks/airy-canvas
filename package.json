@@ -4,7 +4,7 @@
   "private": false,
   "description": "The realization of a front-end drawing board.",
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "serve": "vue-cli-service serve --mode development",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "dist": "vue-cli-service build --target lib --name index ./src/index.js"
