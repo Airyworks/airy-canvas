@@ -1,3 +1,6 @@
+import { Point } from 'pixi.js'
+import MouseEvent from '@/core/mouse-event'
+
 const padding = {
   x: 10, y: 5
 }
@@ -7,8 +10,15 @@ class Transform {
     this.airy = airy
     this.component = component
     this.status = false
+    this.drag = false
+    this.dragStart = null
+    this.dragStartLocal = null
+    this.dragStartGlobal = null
+    this.padding = padding
     this.listener = {
       boxMouseDown: this.boxMouseDown.bind(this),
+      boxMouseMove: this.boxMouseMove.bind(this),
+      boxMouseUp: this.boxMouseUp.bind(this),
       containerMouseDown: this.containerMouseDown.bind(this)
     }
     this.box = document.createElement('div')
@@ -56,13 +66,14 @@ class Transform {
     const styles = {
       box: {
         position: 'absolute',
-        left: `${location.x - padding.x}px`,
-        top: `${location.y - padding.y}px`,
-        padding: `${padding.y}px ${padding.x}px`,
-        width: `${node.width + 2 * padding.x}px`,
-        height: `${node.height + 2 * padding.y}px`,
+        left: `${location.x - this.padding.x}px`,
+        top: `${location.y - this.padding.y}px`,
+        padding: `${this.padding.y}px ${this.padding.x}px`,
+        width: `${node.width + 2 * this.padding.x}px`,
+        height: `${node.height + 2 * this.padding.y}px`,
         border: `1px solid #ffbd01`,
-        boxSizing: 'border-box'
+        boxSizing: 'border-box',
+        cursor: 'move'
       },
       points: {
         position: 'absolute',
@@ -134,18 +145,52 @@ class Transform {
     this.airy.container.appendChild(this.box)
     setTimeout(() => {
       this.box.addEventListener('mousedown', this.listener.boxMouseDown)
+      this.airy.container.addEventListener('mousemove', this.listener.boxMouseMove)
+      this.airy.container.addEventListener('mouseup', this.listener.boxMouseUp)
       this.airy.container.addEventListener('mousedown', this.listener.containerMouseDown)
     }, 100)
   }
 
   unfocus () {
     this.airy.store.unfocus()
-    this.airy.container.removeEventListener('mousedown', this.listener.boxMouseDown)
+    this.box.removeEventListener('mousedown', this.listener.boxMouseDown)
+    this.airy.container.removeEventListener('mousemove', this.listener.boxMouseMove)
+    this.airy.container.removeEventListener('mouseup', this.listener.boxMouseUp)
     this.airy.container.removeEventListener('mousedown', this.listener.containerMouseDown)
   }
 
   boxMouseDown (e) {
     e.stopPropagation()
+    this.drag = true
+    this.dragStart = new MouseEvent(e, this.airy.app.stage)
+    this.dragStartLocal = new Point(this.component.node.position.x, this.component.node.position.y)
+    this.dragStartGlobal = this.component.getGlobalLocation()
+  }
+
+  boxMouseMove (e) {
+    e.stopPropagation()
+    if (this.drag) {
+      // move pixi node
+      const dragCurr = new MouseEvent(e, this.airy.app.stage)
+      const { x: localX, y: localY } = this.dragStartLocal
+      const newLocal = new Point(localX + dragCurr.local.x - this.dragStart.local.x,
+        localY + dragCurr.local.y - this.dragStart.local.y)
+      this.component.updatePositoin(newLocal)
+      // move dom node
+      const { x: globalX, y: globalY } = this.dragStartGlobal
+      const newGlobal = new Point(globalX - this.padding.x + dragCurr.global.x - this.dragStart.global.x,
+        globalY - this.padding.y + dragCurr.global.y - this.dragStart.global.y)
+      this.box.style.left = `${newGlobal.x}px`
+      this.box.style.top = `${newGlobal.y}px`
+    }
+  }
+
+  boxMouseUp (e) {
+    e.stopPropagation()
+    this.drag = false
+    this.dragStart = null
+    this.dragStartLocal = null
+    this.dragStartGlobal = null
   }
 
   containerMouseDown (e) {

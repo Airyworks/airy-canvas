@@ -15,6 +15,10 @@ export default class extends BasicNode {
     }
   }
 
+  updatePositoin (val) {
+    console.log('overwrite set position method')
+  }
+
   clear () {
     this.node.clear()
   }

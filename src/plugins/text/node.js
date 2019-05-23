@@ -16,10 +16,6 @@ export default class extends BasicNode {
     })
   }
 
-  // render () {
-  //   this.stage.addChild(this.node)
-  // }
-
   position (local) {
     this.node.x = local.x
     this.node.y = local.y - this.node.height / 2
@@ -28,19 +24,20 @@ export default class extends BasicNode {
   edit () {}
 
   onclick (e) {
-    const { container } = this.airy
     this.editor.textContent = this.node.text
     // console.log(container, editor, this.node)
     // console.log(e.data.global.x / this.airy.app.screen.width,
     //   e.data.global.y / this.airy.app.screen.height)
     // console.log(this, this.airy, )
-    const location = this.getGlobalLocation()
+    // const location = this.getGlobalLocation()
+    const { x: left, y: top } = this.transform.padding
     const styles = {
       editor: {
         position: 'absolute',
-        left: `${location.x}px`,
-        top: `${location.y}px`,
+        left: `${left}px`,
+        top: `${top}px`,
         margin: 0,
+        cursor: 'text',
         whiteSpace: 'nowrap',
         fontSize: `${this.setting.fontSize * this.airy.app.stage.scale.y}px`,
         fontStyle: this.setting.fontStyle,
@@ -54,14 +51,13 @@ export default class extends BasicNode {
     this.sheet.attach()
     const { classes } = this.sheet
     this.editor.className = classes.editor
-    container.appendChild(this.editor)
+    this.transform.box.appendChild(this.editor)
     this.node.renderable = false
   }
 
   unfocus () {
-    const { container } = this.airy
     this.sheet.detach()
-    container.removeChild(this.editor)
+    this.transform.box.removeChild(this.editor)
     // write back value
     this.node.text = this.editor.textContent
     // diaplay

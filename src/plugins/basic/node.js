@@ -27,6 +27,11 @@ class BasicNode {
     }
   }
 
+  updatePositoin (val) {
+    console.log('updatePositoin basic')
+    this.node.position = val
+  }
+
   createNode () {}
   mountNode () {
     if (this.node) {
@@ -45,8 +50,9 @@ class BasicNode {
   unfocus () {}
 
   getGlobalLocation () {
-    const { x, y } = this.node
+    const { x, y } = this.node.hitArea || this.node
     const stage = this.airy.app.stage
+    console.log(this.node, this.node.x, stage.pivot.x, stage.scale.x, stage.position.x)
     return new Point(
       (x - stage.pivot.x) * stage.scale.x + stage.position.x,
       (y - stage.pivot.y) * stage.scale.y + stage.position.y
