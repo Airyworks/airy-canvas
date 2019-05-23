@@ -7,6 +7,10 @@ class Transform {
     this.airy = airy
     this.component = component
     this.status = false
+    this.listener = {
+      boxMouseDown: this.boxMouseDown.bind(this),
+      containerMouseDown: this.containerMouseDown.bind(this)
+    }
     this.box = document.createElement('div')
     this.lt = document.createElement('div')
     this.t = document.createElement('div')
@@ -33,13 +37,14 @@ class Transform {
   }
 
   hide () {
-    // const node = this.component.node
-    // if (node && this.status) {
-    //   this.status = false
-    //   this.drawBox()
-    //   this.airy.app.stage.removeChild(this.box)
-    //   this.airy.needUpdate = true
-    // }
+    const node = this.component.node
+    if (node && this.status) {
+      this.status = false
+      this.airy.container.removeChild(this.box)
+      if (this.sheet) {
+        this.sheet.detach()
+      }
+    }
   }
 
   initBox () {
@@ -65,7 +70,8 @@ class Transform {
         height: `6px`,
         borderRadius: `50%`,
         border: `1px solid #43abf4`,
-        background: `#ffffff`
+        background: `#ffffff`,
+        cursor: 'pointer'
       },
       lt: {
         left: 0,
@@ -109,7 +115,10 @@ class Transform {
       }
     }
 
-    const { classes } = this.airy.jss.createStyleSheet(styles).attach()
+    this.sheet = this.airy.jss.createStyleSheet(styles)
+    this.sheet.attach()
+    const { classes } = this.sheet
+
     this.box.className = classes.box
     this.lt.classList = `${classes.points} ${classes.lt}`
     this.t.classList = `${classes.points} ${classes.t}`
@@ -123,6 +132,24 @@ class Transform {
 
   render () {
     this.airy.container.appendChild(this.box)
+    setTimeout(() => {
+      this.box.addEventListener('mousedown', this.listener.boxMouseDown)
+      this.airy.container.addEventListener('mousedown', this.listener.containerMouseDown)
+    }, 100)
+  }
+
+  unfocus () {
+    this.airy.store.unfocus()
+    this.airy.container.removeEventListener('mousedown', this.listener.boxMouseDown)
+    this.airy.container.removeEventListener('mousedown', this.listener.containerMouseDown)
+  }
+
+  boxMouseDown (e) {
+    e.stopPropagation()
+  }
+
+  containerMouseDown (e) {
+    this.unfocus()
   }
 }
 

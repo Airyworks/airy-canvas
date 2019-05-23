@@ -23,6 +23,7 @@ class BasicNode {
       this.transform.show()
     } else {
       this.transform.hide()
+      this.unfocus()
     }
   }
 
@@ -41,7 +42,6 @@ class BasicNode {
   }
 
   onclick (e) {}
-
   unfocus () {}
 
   getGlobalLocation () {

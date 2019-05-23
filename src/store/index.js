@@ -3,6 +3,7 @@ import Root from './root'
 
 class Store {
   constructor ({ stage, airy }) {
+    this.airy = airy
     this.root = new Root({ stage, airy })
     this[uuidDictSymbol] = {}
     this[idDictSymbol] = {}
@@ -25,6 +26,7 @@ class Store {
   }
 
   commit (el, action, payload) {
+    console.log(el, action)
     if (payload) {
       el[action](payload)
     } else {
@@ -43,11 +45,11 @@ class Store {
   }
 
   unfocus () {
-    console.log(this.focusNode)
     if (this.focusNode) {
-      this.focusNode.unfocus()
+      this.focusNode.focus = false
       this.focusNode = undefined
     }
+    this.airy.needUpdate = true
   }
 }
 

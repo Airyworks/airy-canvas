@@ -189,7 +189,8 @@ export default class {
     this.pointerDownSwitch = true
     if (plugin.name !== 'basic-select') {
       this.store.unfocus()
-      this.needUpdate = this.needUpdate || plugin.beginWithMouse(this.args, new MouseEvent(e, this.app.stage))
+      const needUpdate = plugin.beginWithMouse(this.args, new MouseEvent(e, this.app.stage))
+      this.needUpdate = this.needUpdate || needUpdate
     }
   }
 
@@ -199,7 +200,8 @@ export default class {
       return
     }
     if (plugin.name !== 'basic-select') {
-      this.needUpdate = this.needUpdate || plugin.moveWithMouse(this.args, new MouseEvent(e, this.app.stage))
+      const needUpdate = plugin.moveWithMouse(this.args, new MouseEvent(e, this.app.stage))
+      this.needUpdate = this.needUpdate || needUpdate
     }
   }
 
@@ -210,7 +212,8 @@ export default class {
     }
     this.pointerDownSwitch = false
     if (plugin.name !== 'basic-select') {
-      this.needUpdate = this.needUpdate || plugin.endWithMouse(this.args, new MouseEvent(e, this.app.stage))
+      const needUpdate = plugin.endWithMouse(this.args, new MouseEvent(e, this.app.stage))
+      this.needUpdate = this.needUpdate || needUpdate
     }
   }
 

@@ -28,8 +28,8 @@ export default class extends BasicNode {
   edit () {}
 
   onclick (e) {
-    this.editor.textContent = this.node.text
     const { container } = this.airy
+    this.editor.textContent = this.node.text
     // console.log(container, editor, this.node)
     // console.log(e.data.global.x / this.airy.app.screen.width,
     //   e.data.global.y / this.airy.app.screen.height)
@@ -50,13 +50,21 @@ export default class extends BasicNode {
       }
     }
     this.editor.contentEditable = 'true'
-    const { classes } = this.airy.jss.createStyleSheet(styles).attach()
+    this.sheet = this.airy.jss.createStyleSheet(styles)
+    this.sheet.attach()
+    const { classes } = this.sheet
     this.editor.className = classes.editor
     container.appendChild(this.editor)
-    this.node.visible = false
+    this.node.renderable = false
   }
 
   unfocus () {
-    console.log('text node unfocus', this.airy.store)
+    const { container } = this.airy
+    this.sheet.detach()
+    container.removeChild(this.editor)
+    // write back value
+    this.node.text = this.editor.textContent
+    // diaplay
+    this.node.renderable = true
   }
 }
