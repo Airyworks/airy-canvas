@@ -182,6 +182,7 @@ export default class extends Basic {
     this.path = simplify(this.path)
     this.ctrlPoints = genControlPoints(this.path)
     this.updateLineByPath(store)
+    store.commit(this.activeNode, 'toSprite')
     return true
   }
 

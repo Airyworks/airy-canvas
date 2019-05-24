@@ -61,7 +61,8 @@ class Transform {
   }
 
   drawBox (node) {
-    const location = this.component.getGlobalLocation()
+    const location = this.component.getGlobalPosition()
+    const { x: stageScaleX, y: stageScaleY } = this.airy.app.stage.scale
 
     const styles = {
       box: {
@@ -69,8 +70,8 @@ class Transform {
         left: `${location.x - this.padding.x}px`,
         top: `${location.y - this.padding.y}px`,
         padding: `${this.padding.y}px ${this.padding.x}px`,
-        width: `${node.width + 2 * this.padding.x}px`,
-        height: `${node.height + 2 * this.padding.y}px`,
+        width: `${node.width * node.scale.x * stageScaleX + 2 * this.padding.x}px`,
+        height: `${node.height * node.scale.y * stageScaleY + 2 * this.padding.y}px`,
         border: `1px solid #ffbd01`,
         boxSizing: 'border-box',
         cursor: 'move'
@@ -163,8 +164,9 @@ class Transform {
     e.stopPropagation()
     this.drag = true
     this.dragStart = new MouseEvent(e, this.airy.app.stage)
-    this.dragStartLocal = new Point(this.component.node.position.x, this.component.node.position.y)
-    this.dragStartGlobal = this.component.getGlobalLocation()
+    console.log(this.component)
+    this.dragStartLocal = this.component.getLocalPosition()
+    this.dragStartGlobal = this.component.getGlobalPosition()
   }
 
   boxMouseMove (e) {
@@ -175,7 +177,7 @@ class Transform {
       const { x: localX, y: localY } = this.dragStartLocal
       const newLocal = new Point(localX + dragCurr.local.x - this.dragStart.local.x,
         localY + dragCurr.local.y - this.dragStart.local.y)
-      this.component.updatePositoin(newLocal)
+      this.component.updateLocalPositoin(newLocal)
       // move dom node
       const { x: globalX, y: globalY } = this.dragStartGlobal
       const newGlobal = new Point(globalX - this.padding.x + dragCurr.global.x - this.dragStart.global.x,

@@ -27,11 +27,6 @@ class BasicNode {
     }
   }
 
-  updatePositoin (val) {
-    console.log('updatePositoin basic')
-    this.node.position = val
-  }
-
   createNode () {}
   mountNode () {
     if (this.node) {
@@ -49,10 +44,17 @@ class BasicNode {
   onclick (e) {}
   unfocus () {}
 
-  getGlobalLocation () {
+  updateLocalPositoin (val) {
+    this.node.position = val
+    this.airy.needUpdate = true
+  }
+
+  getLocalPosition () {
+    return new Point(this.node.position.x, this.node.position.y)
+  }
+  getGlobalPosition () {
     const { x, y } = this.node.hitArea || this.node
     const stage = this.airy.app.stage
-    console.log(this.node, this.node.x, stage.pivot.x, stage.scale.x, stage.position.x)
     return new Point(
       (x - stage.pivot.x) * stage.scale.x + stage.position.x,
       (y - stage.pivot.y) * stage.scale.y + stage.position.y

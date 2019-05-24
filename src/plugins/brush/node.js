@@ -15,10 +15,6 @@ export default class extends BasicNode {
     }
   }
 
-  updatePositoin (val) {
-    console.log('overwrite set position method')
-  }
-
   clear () {
     this.node.clear()
   }
@@ -55,6 +51,14 @@ export default class extends BasicNode {
 
   lineTo (payload) {
     this.node.lineTo(...payload)
+  }
+
+  toSprite () {
+    // const parent = this.node.parent
+    // parent.removeChild(this.node)
+    // this.node = new Sprite(this.node.generateTexture())
+    // console.log(parent, this.node)
+    // parent.addChild(this.node)
   }
 
   hitArea () {
