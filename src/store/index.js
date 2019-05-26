@@ -1,5 +1,6 @@
 import { uuidDictSymbol, idDictSymbol } from './symbols'
 import Root from './root'
+import StoreQueue from './queue'
 
 class Store {
   constructor ({ stage, airy }) {
@@ -8,6 +9,7 @@ class Store {
     this[uuidDictSymbol] = {}
     this[idDictSymbol] = {}
     this.focusNode = undefined
+    this.queue = new StoreQueue(this)
   }
 
   addNode (node) {
@@ -37,19 +39,33 @@ class Store {
 
   focus (uuid) {
     const node = this.findByUuid(uuid)
+    // console.log(node)
     if (node) {
-      this.unfocus()
-      node.focus = true
-      this.focusNode = node
+      this.queue.commit('focus', node.uuid)
+      // if (this.focusNode && this.focusNode.uuid !== node.uuid) {
+      //   console.log('trigger unfocus before set')
+      //   this.unfocus()
+      // }
+      // this.focusNode = node
+      // console.log('focus node after set', this.focusNode)
     }
   }
 
+  showFocus () {
+    this.queue.process()
+    // if (this.focusNode) {
+    //   this.focusNode.focus = true
+    // }
+  }
+
   unfocus () {
+    // console.log('store unfocus event', new Error().stack)
     if (this.focusNode) {
-      this.focusNode.focus = false
-      this.focusNode = undefined
+      // this.focusNode.focus = false
+      // this.focusNode = undefined
+      this.queue.commit('unfocus', this.focusNode.uuid)
     }
-    this.airy.needUpdate = true
+    // this.airy.needUpdate = true
   }
 }
 

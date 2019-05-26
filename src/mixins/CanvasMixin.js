@@ -52,7 +52,7 @@ export default {
   },
   mounted () {
     this.box = this.$refs['airy-box']
-    this.airyCanvas = new AiryCanvas(this.box, this._options, this.plugins, cloneDeep(this.data))
+    this.airyCanvas = new AiryCanvas(this, this.box, this._options, this.plugins, cloneDeep(this.data))
     window.airyCanvas = this.airyCanvas
     console.log(process)
     this.active = 'basic-move'

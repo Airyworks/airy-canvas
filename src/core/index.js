@@ -28,7 +28,8 @@ const withPIXIDefaultOptions = options => Object.assign({
 }, options)
 
 export default class {
-  constructor (container, { fluid, width, height }, plugins, history) {
+  constructor (component, container, { fluid, width, height }, plugins, history) {
+    this.component = component
     this.container = container
     this.jss = jss
     this.fluid = fluid
@@ -54,6 +55,7 @@ export default class {
       app: this.app,
       stage: this.app.stage
     })
+    window.store = this.store
 
     // canvas DOM operation
     this.app.view.style.display = 'block'
@@ -75,7 +77,8 @@ export default class {
     this.listener = {
       mousedown: this.mousedown.bind(this),
       mousemove: this.mousemove.bind(this),
-      mouseup: this.mouseup.bind(this)
+      mouseup: this.mouseup.bind(this),
+      click: this.click.bind(this)
     }
     this.initEventListener()
     this.middlewares = []
@@ -99,13 +102,13 @@ export default class {
       this[activePluginSymbol].active(this.args)
       this[activePluginSymbol] = plugin
       this[activePluginSymbol].inactive(this.args)
-      // if (plugin.name === 'basic-select') {
-      //   // remove event handler
-      //   this.removeEventListener()
-      // } else {
-      //   // add event handler
-      //   this.addEventListener()
-      // }
+      if (plugin.name === 'basic-select') {
+        // remove event handler
+        this.removeEventListener()
+      } else {
+        // add event handler
+        this.addEventListener()
+      }
     }
   }
 
@@ -157,6 +160,8 @@ export default class {
   initEventListener () {
     this.app.view.oncontextmenu = () => false
     this.container.addEventListener('paste', this.paste.bind(this))
+    // can trigger dom focus in click
+    this.container.addEventListener('click', this.listener.click)
     this.addEventListener()
   }
 
@@ -175,10 +180,12 @@ export default class {
       this.container.removeEventListener('mousedown', this.listener.mousedown)
       this.container.removeEventListener('mousemove', this.listener.mousemove)
       this.container.removeEventListener('mouseup', this.listener.mouseup)
+      // this.container.removeEventListener('click', this.listener.click)
     }
   }
 
   mousedown (e) {
+    console.log('mousedown')
     const plugin = this.activePlugin
     if (e.button !== 0) { // only react to the left mouse button
       return
@@ -206,6 +213,7 @@ export default class {
   }
 
   mouseup (e) {
+    console.log('mouseup')
     const plugin = this.activePlugin
     if (!this.pointerDownSwitch) {
       return
@@ -214,7 +222,17 @@ export default class {
     if (plugin.name !== 'basic-select') {
       const needUpdate = plugin.endWithMouse(this.args, new MouseEvent(e, this.app.stage))
       this.needUpdate = this.needUpdate || needUpdate
+      this.switchPlugin('basic-select')
     }
+  }
+
+  click (e) {
+    console.log('click', this.store.focusNode)
+    // if (this.store.focusNode) {
+    //   console.log('click focusNode')
+    //   this.store.focus(this.store.focusNode.uuid)
+    // }
+    this.store.showFocus()
   }
 
   paste (e) {
@@ -257,5 +275,9 @@ export default class {
       this.pointerDownSwitch = false
       this.activePlugin.endWithMouse(this.args, new MouseEvent(mouse, this.app.stage))
     }
+  }
+
+  switchPlugin (name) {
+    this.component.activePlugin(name)
   }
 }

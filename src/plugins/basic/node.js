@@ -18,12 +18,17 @@ class BasicNode {
   }
 
   set focus (val) {
-    this.$focus = val
-    if (val) {
-      this.transform.show()
-    } else {
-      this.transform.hide()
-      this.unfocus()
+    if (!(this.$focus === val)) {
+      console.log(this.$focus, val, 'this.focusEvent()')
+      this.$focus = val
+      if (val) {
+        this.transform.show()
+        this.focusEvent()
+      } else {
+        this.transform.hide()
+        this.unfocusEvent()
+        this.unfocus()
+      }
     }
   }
 
@@ -37,12 +42,15 @@ class BasicNode {
 
   clickEvent (e) {
     e.stopPropagation()
+    console.log('node pointdown', this.type, this.uuid)
     this.airy.store.focus(this.uuid)
-    this.onclick(e)
+    // this.airy.store.focus()
+    this.focusEvent(e)
   }
 
-  onclick (e) {}
   unfocus () {}
+  focusEvent (e) {}
+  unfocusEvent () {}
 
   updateLocalPositoin (val) {
     this.node.position = val

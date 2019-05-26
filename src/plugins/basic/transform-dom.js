@@ -131,6 +131,7 @@ class Transform {
     this.sheet.attach()
     const { classes } = this.sheet
 
+    this.box.removeAttribute('style')
     this.box.className = classes.box
     this.lt.classList = `${classes.points} ${classes.lt}`
     this.t.classList = `${classes.points} ${classes.t}`
@@ -197,6 +198,14 @@ class Transform {
 
   containerMouseDown (e) {
     this.unfocus()
+  }
+
+  resize (width, height) {
+    // input size without padding
+    const node = this.component.node
+    const { x: stageScaleX, y: stageScaleY } = this.airy.app.stage.scale
+    this.box.style.width = `${width * node.scale.x * stageScaleX + 2 * this.padding.x}px`
+    this.box.style.height = `${height * node.scale.y * stageScaleY + 2 * this.padding.y}px`
   }
 }
 

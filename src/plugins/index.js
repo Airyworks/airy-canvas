@@ -4,6 +4,7 @@ import Brush from '@/plugins/brush/'
 import Line from '@/plugins/line/'
 import Image from '@/plugins/image/'
 import Text from '@/plugins/text/'
+import Sticky from '@/plugins/sticky/'
 
 export default [
   Select,
@@ -11,5 +12,6 @@ export default [
   Brush,
   Line,
   Image,
-  Text
+  Text,
+  Sticky
 ]

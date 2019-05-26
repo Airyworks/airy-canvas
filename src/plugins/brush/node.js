@@ -1,9 +1,11 @@
 import BasicNode from '@/plugins/basic/node'
 import { Graphics, Point, Rectangle } from 'pixi.js'
+import cfg from './airy.plugin'
 
 export default class extends BasicNode {
   constructor ({ airy }, setting) {
     super(airy)
+    this.type = cfg.name
     this.setting = setting
     this.node = new Graphics()
     this.startPoint = new Point(0, 0)

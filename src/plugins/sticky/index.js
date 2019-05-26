@@ -3,6 +3,7 @@ import Basic from '@/plugins/basic/'
 import Node from './node'
 import Component from './component'
 import Setting from './setting'
+import cfg from './airy.plugin'
 
 const defaultSetting = {
   fill: '#000000',
@@ -28,7 +29,7 @@ export default class extends Basic {
   }
 
   get name () {
-    return 'basic-text'
+    return cfg.name
   }
 
   get component () {
@@ -44,10 +45,10 @@ export default class extends Basic {
   }
 
   beginWithMouse ({ airy, stage, store }, { local }) {
-    const text = new Node({ airy, stage }, this.setting)
-    store.addNode(text)
-    store.commit(text, 'position', local)
-    airy.store.focus(text.uuid)
+    const sticky = new Node({ airy, stage }, this.setting)
+    store.addNode(sticky)
+    store.commit(sticky, 'position', local)
+    airy.store.focus(sticky.uuid)
     return true
   }
 

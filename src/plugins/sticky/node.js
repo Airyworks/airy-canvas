@@ -1,25 +1,19 @@
 import BasicNode from '@/plugins/basic/node'
 import { Text } from 'pixi.js'
-import cfg from './airy.plugin'
 
 export default class extends BasicNode {
   constructor ({ airy, stage }, setting) {
     super(airy)
-    this.type = cfg.name
     this.airy = airy
     this.stage = stage
     this.setting = setting
 
-    this.node = new Text('', this.setting)
+    this.node = new Text('Rich text with a lot of options and across multiple lines', this.setting)
     this.editor = document.createElement('p')
     this.editor.addEventListener('mousedown', (e) => {
       console.log('editor mousedown')
       e.stopPropagation()
     })
-
-    this.listener = {
-      changeEvent: this.changeEvent.bind(this)
-    }
   }
 
   position (local) {
@@ -29,8 +23,13 @@ export default class extends BasicNode {
 
   edit () {}
 
-  focusEvent (e) {
+  onclick (e) {
     this.editor.textContent = this.node.text
+    // console.log(container, editor, this.node)
+    // console.log(e.data.global.x / this.airy.app.screen.width,
+    //   e.data.global.y / this.airy.app.screen.height)
+    // console.log(this, this.airy, )
+    // const location = this.getGlobalLocation()
     const { x: left, y: top } = this.transform.padding
     const styles = {
       editor: {
@@ -53,11 +52,7 @@ export default class extends BasicNode {
     const { classes } = this.sheet
     this.editor.className = classes.editor
     this.transform.box.appendChild(this.editor)
-    console.log('this.editor.focus()')
-    this.editor.focus()
     this.node.renderable = false
-    this.editor.addEventListener('input', this.listener.changeEvent)
-    // throw new Error('d')
   }
 
   unfocus () {
@@ -67,11 +62,5 @@ export default class extends BasicNode {
     this.node.text = this.editor.textContent
     // diaplay
     this.node.renderable = true
-    this.editor.removeEventListener('input', this.listener.changeEvent)
-  }
-
-  changeEvent (e) {
-    console.log(this.editor.offsetWidth, this.editor.offsetHeight, this.node)
-    this.transform.resize(this.editor.offsetWidth + 8, this.editor.offsetHeight + 4)
   }
 }
