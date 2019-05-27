@@ -5,22 +5,7 @@ import Component from './component'
 import Setting from './setting'
 import cfg from './airy.plugin'
 
-const defaultSetting = {
-  fill: '#000000',
-  breakWords: true,
-  fontFamily: 'sans-serif',
-  fontSize: 24,
-  fontStyle: 'normal',
-  wordWrap: false,
-  wordWrapWidth: 100,
-  letterSpacing: 0,
-  lineHeight: 27,
-  under: false,
-  dropShadow: false,
-  dropShadowColor: '#000000',
-  stroke: 'black',
-  strokeThickness: 0
-}
+const defaultSetting = cfg.defaultSetting
 
 export default class extends Basic {
   constructor () {
@@ -45,10 +30,10 @@ export default class extends Basic {
   }
 
   beginWithMouse ({ airy, stage, store }, { local }) {
-    const sticky = new Node({ airy, stage }, this.setting)
-    store.addNode(sticky)
-    store.commit(sticky, 'position', local)
-    airy.store.focus(sticky.uuid)
+    const text = new Node({ airy, stage }, this.setting)
+    store.addNode(text)
+    store.commit(text, 'position', local)
+    airy.store.focus(text.uuid)
     return true
   }
 

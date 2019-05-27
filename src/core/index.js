@@ -227,7 +227,6 @@ export default class {
   }
 
   click (e) {
-    console.log('click', this.store.focusNode)
     // if (this.store.focusNode) {
     //   console.log('click focusNode')
     //   this.store.focus(this.store.focusNode.uuid)

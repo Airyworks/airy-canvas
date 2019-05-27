@@ -13,7 +13,7 @@ class StoreQueue {
   }
 
   process () {
-    console.log('process queue', JSON.stringify(this.queue))
+    if (this.queue.length === 0) return false
     let finalState = ['unfocus']
     const history = []
     // merge
@@ -36,7 +36,6 @@ class StoreQueue {
     if (finalState[0] === 'focus') {
       const node = this.store.findByUuid(finalState[1])
       if (node) {
-        console.log('queue result', node)
         if (this.store.focusNode && this.store.focusNode.uuid !== node.uuid) {
           this.store.focusNode.focus = false
         }

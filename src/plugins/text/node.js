@@ -1,5 +1,6 @@
 import BasicNode from '@/plugins/basic/node'
-import { Text } from 'pixi.js'
+// import { Text } from 'pixi.js'
+import MultiStyleText from 'pixi-multistyle-text'
 import cfg from './airy.plugin'
 
 export default class extends BasicNode {
@@ -10,8 +11,18 @@ export default class extends BasicNode {
     this.stage = stage
     this.setting = setting
 
-    this.node = new Text('', this.setting)
-    this.editor = document.createElement('p')
+    this.node = new MultiStyleText('', {
+      default: this.setting,
+      l1: {
+        fontSize: '24px',
+        fill: '#66ccff'
+      },
+      l2: {
+        fontStyle: 'italic',
+        fill: '#4488ff'
+      }
+    })
+    this.editor = document.createElement('div')
     this.editor.addEventListener('mousedown', (e) => {
       console.log('editor mousedown')
       e.stopPropagation()
@@ -30,7 +41,13 @@ export default class extends BasicNode {
   edit () {}
 
   focusEvent (e) {
-    this.editor.textContent = this.node.text
+    if (this.node.text.trim() !== '') {
+      window.ddd = this.node.text
+      this.editor.innerHTML = this.node.text.split('\n')
+        .map((i) => `<div>${i}</div>`).join('')
+    } else {
+      this.editor.innerHTML = ''
+    }
     const { x: left, y: top } = this.transform.padding
     const styles = {
       editor: {
@@ -43,6 +60,7 @@ export default class extends BasicNode {
         fontSize: `${this.setting.fontSize * this.airy.app.stage.scale.y}px`,
         fontStyle: this.setting.fontStyle,
         lineHeight: `${this.setting.lineHeight * this.airy.app.stage.scale.y}px`,
+        minHeight: `${this.setting.lineHeight * this.airy.app.stage.scale.y}px`,
         color: this.setting.fill,
         fontFamily: this.setting.fontFamily
       }
@@ -53,25 +71,27 @@ export default class extends BasicNode {
     const { classes } = this.sheet
     this.editor.className = classes.editor
     this.transform.box.appendChild(this.editor)
-    console.log('this.editor.focus()')
     this.editor.focus()
     this.node.renderable = false
     this.editor.addEventListener('input', this.listener.changeEvent)
-    // throw new Error('d')
+    window.editor = this.editor
   }
 
   unfocus () {
     this.sheet.detach()
     this.transform.box.removeChild(this.editor)
-    // write back value
-    this.node.text = this.editor.textContent
-    // diaplay
+    const content = this.editor.innerHTML
+    const text = content.replace(/<div>/g, '\n')
+      .replace(/<\/div>/g, '\n')
+      .replace(/\n+/g, '\n')
+      .replace(/\s+$/, '')
+      .replace(/^\s+/, '')
+    this.node.text = text
     this.node.renderable = true
     this.editor.removeEventListener('input', this.listener.changeEvent)
   }
 
   changeEvent (e) {
-    console.log(this.editor.offsetWidth, this.editor.offsetHeight, this.node)
     this.transform.resize(this.editor.offsetWidth + 8, this.editor.offsetHeight + 4)
   }
 }

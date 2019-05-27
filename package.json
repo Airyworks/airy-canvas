@@ -20,6 +20,7 @@
     "jss-plugin-camel-case": "^10.0.0-alpha.7",
     "koa-compose": "^4.1.0",
     "lodash": "^4.17.11",
+    "pixi-multistyle-text": "^0.7.0",
     "pixi-viewport": "^3.23.2",
     "pixi.js": "^4.8.7",
     "roboto-fontface": "^0.10.0",

@@ -5947,6 +5947,11 @@ pixi-gl-core@^1.1.4:
   resolved "https://registry.yarnpkg.com/pixi-gl-core/-/pixi-gl-core-1.1.4.tgz#8b4b5c433b31e419bc379dc565ce1b835a91b372"
   integrity sha1-i0tcQzsx5Bm8N53FZc4bg1qRs3I=
 
+pixi-multistyle-text@^0.7.0:
+  version "0.7.0"
+  resolved "https://registry.npm.taobao.org/pixi-multistyle-text/download/pixi-multistyle-text-0.7.0.tgz#8cd9d85ba35618c63e1012d241a2e9941f68a98e"
+  integrity sha1-jNnYW6NWGMY+EBLSQaLplB9oqY4=
+
 pixi-viewport@^3.23.2:
   version "3.23.2"
   resolved "https://registry.yarnpkg.com/pixi-viewport/-/pixi-viewport-3.23.2.tgz#edb0d819b9a8213de305e971595d010be960d2cd"
