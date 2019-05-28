@@ -137,6 +137,7 @@ export default class {
   resize () {
     const parent = this.app.view.parentNode
     this.app.renderer.resize(parent.clientWidth, parent.clientHeight)
+    this.needUpdate = true
   }
 
   render (item) {
@@ -152,9 +153,7 @@ export default class {
   }
 
   renderHistory () {
-    for (const item of this.history) {
-      this.render(item)
-    }
+    this.store.renderHistory(this.history)
   }
 
   initEventListener () {

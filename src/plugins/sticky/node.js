@@ -63,6 +63,7 @@ export default class extends BasicNode {
     }
     this.background = sticky
     this.node.addChild(this.background)
+    this.node.setChildIndex(this.background, 0)
     this.setTextPosition()
   }
 
@@ -124,9 +125,10 @@ export default class extends BasicNode {
     this.text.text = text
     this.text.renderable = true
     this.editor.removeEventListener('input', this.listener.changeEvent)
+    this.resizeSticky()
   }
 
   changeEvent (e) {
-    this.transform.resize(this.editor.offsetWidth + 8, this.editor.offsetHeight + 4)
+    // this.transform.resize(this.editor.offsetWidth + 8, this.editor.offsetHeight + 4)
   }
 }

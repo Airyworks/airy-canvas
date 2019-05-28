@@ -68,6 +68,12 @@ class BasicNode {
       (y - stage.pivot.y) * stage.scale.y + stage.position.y
     )
   }
+
+  stringify () {
+    return ''
+  }
+
+  fromData () {}
 }
 
 export default BasicNode

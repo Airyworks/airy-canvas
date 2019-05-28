@@ -13,6 +13,7 @@ const defaultSetting = {
 export default class extends Basic {
   constructor () {
     super()
+    this.Node = Node
     this.setting = cloneDeep(defaultSetting)
     this.color = 0x1099bb
     this.start = { x: 0, y: 0 }
@@ -44,7 +45,7 @@ export default class extends Basic {
 
   moveWithMouse ({ store }, { local }) {
     if (this.activeLine) {
-      store.commit(this.activeLine, 'move', {
+      store.action(this.activeLine, 'move', {
         x: local.x,
         y: local.y
       })

@@ -9,6 +9,7 @@
 
 <script>
 import AiryCanvas from '@/AiryCanvas'
+import mockData from './mock-data'
 
 export default {
   name: 'example',
@@ -17,7 +18,7 @@ export default {
   },
   data () {
     return {
-      airyCanvasData: [],
+      airyCanvasData: mockData,
       airyCanvasOptions: {
         fluid: true
       }

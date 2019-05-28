@@ -5,9 +5,10 @@ import StoreQueue from './queue'
 class Store {
   constructor ({ stage, airy }) {
     this.airy = airy
+    this.stage = stage
     this.root = new Root({ stage, airy })
-    this[uuidDictSymbol] = {}
-    this[idDictSymbol] = {}
+    this[uuidDictSymbol] = { 'root': this.root }
+    this[idDictSymbol] = { 'root': this.root }
     this.focusNode = undefined
     this.queue = new StoreQueue(this)
   }
@@ -27,14 +28,12 @@ class Store {
     return this[idDictSymbol][id]
   }
 
-  commit (el, action, payload) {
-    console.log(el, action)
+  action (el, action, payload) {
     if (payload) {
       el[action](payload)
     } else {
       el[action]()
     }
-    console.log('commit finish')
   }
 
   focus (uuid) {
@@ -66,6 +65,49 @@ class Store {
       this.queue.commit('unfocus', this.focusNode.uuid)
     }
     // this.airy.needUpdate = true
+  }
+
+  commit (uuid) {
+    const node = this.findByUuid(uuid)
+    if (node) {
+      console.log(node, node.stringify())
+    }
+  }
+
+  renderHistory (history) {
+    for (const item of history) {
+      this.createNode(item)
+    }
+  }
+
+  createNode (data) {
+    console.log(data)
+    const { airy, stage } = this
+    const reg = /^<([0-9a-zA-Z-]*)>/
+    const pluginPrefix = data.data.match(reg)
+    if (pluginPrefix) {
+      const pluginName = pluginPrefix[1]
+      const plugin = this.airy.plugins.find(i => i.name === pluginName)
+      if (plugin) {
+        const node = new plugin.Node({ airy, stage }, plugin.setting)
+        const contentReg = /^<[0-9a-zA-Z-]*>([\s\S]*)$/
+        node.fromData(data.data.match(contentReg)[1])
+        const parent = this.findByUuid(data.parent)
+        if (parent) {
+          parent.addChild(node)
+          console.log(parent)
+        } else {
+          // error, parent nou found
+          throw Error(`parent ${data.parent} not found`)
+        }
+      } else {
+        // error, plugin not found
+        throw Error(`plugin ${pluginName} not found`)
+      }
+    } else {
+      // error, invalid input data
+      throw Error(`invalid input data: ${data.data}`)
+    }
   }
 }
 

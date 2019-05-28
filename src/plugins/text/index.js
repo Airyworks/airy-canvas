@@ -24,6 +24,7 @@ const defaultSetting = {
 export default class extends Basic {
   constructor () {
     super()
+    this.Node = Node
     this.setting = cloneDeep(defaultSetting)
   }
 
@@ -46,7 +47,7 @@ export default class extends Basic {
   beginWithMouse ({ airy, stage, store }, { local }) {
     const text = new Node({ airy, stage }, this.setting)
     store.addNode(text)
-    store.commit(text, 'position', local)
+    store.action(text, 'position', local)
     airy.store.focus(text.uuid)
     return true
   }

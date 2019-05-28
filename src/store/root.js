@@ -4,7 +4,9 @@ import Basic from '@/plugins/basic/node'
 class Root extends Basic {
   constructor ({ stage, airy }) {
     super(airy)
-    this.type = 'root'
+    this.uuid = 'root'
+    this.id = 'root'
+    this.type = 'basic-root'
     this.node = new Container()
     stage.addChild(this.node)
     this.children = []

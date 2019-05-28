@@ -81,6 +81,7 @@ export default class extends BasicNode {
     this.sheet.detach()
     this.transform.box.removeChild(this.editor)
     const content = this.editor.innerHTML
+    console.log(content)
     const text = content.replace(/<div>/g, '\n')
       .replace(/<\/div>/g, '\n')
       .replace(/\n+/g, '\n')

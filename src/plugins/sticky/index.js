@@ -5,12 +5,11 @@ import Component from './component'
 import Setting from './setting'
 import cfg from './airy.plugin'
 
-const defaultSetting = cfg.defaultSetting
-
 export default class extends Basic {
   constructor () {
     super()
-    this.setting = cloneDeep(defaultSetting)
+    this.Node = Node
+    this.setting = cloneDeep(cfg.defaultSetting)
   }
 
   get name () {
@@ -30,16 +29,19 @@ export default class extends Basic {
   }
 
   beginWithMouse ({ airy, stage, store }, { local }) {
-    const text = new Node({ airy, stage }, this.setting)
-    store.addNode(text)
-    store.commit(text, 'position', local)
-    airy.store.focus(text.uuid)
+    const sticky = new Node({ airy, stage }, this.setting)
+    this.activeNode = sticky
+    store.addNode(sticky)
+    store.action(sticky, 'position', local)
+    airy.store.focus(sticky.uuid)
     return true
   }
 
   moveWithMouse (_, { local }) {}
 
-  endWithMouse () {}
+  endWithMouse ({ store }) {
+    store.commit(this.activeNode.uuid)
+  }
 
   render ({ data }) {}
 

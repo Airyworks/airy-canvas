@@ -1,12 +1,15 @@
-import BasicNode from '@/plugins/basic/node'
+import { cloneDeep } from 'lodash'
 import { Graphics, Point, Rectangle } from 'pixi.js'
+import BasicNode from '@/plugins/basic/node'
 import cfg from './airy.plugin'
+import { toFixed } from '@/utils/number'
+import { simplify, genControlPoints } from './utils'
 
 export default class extends BasicNode {
   constructor ({ airy }, setting) {
     super(airy)
     this.type = cfg.name
-    this.setting = setting
+    this.setting = cloneDeep(setting)
     this.node = new Graphics()
     this.startPoint = new Point(0, 0)
     this.area = {
@@ -15,6 +18,8 @@ export default class extends BasicNode {
       maxx: null,
       maxy: null
     }
+    this.path = []
+    this.ctrlPoints = []
   }
 
   clear () {
@@ -55,12 +60,36 @@ export default class extends BasicNode {
     this.node.lineTo(...payload)
   }
 
-  toSprite () {
-    // const parent = this.node.parent
-    // parent.removeChild(this.node)
-    // this.node = new Sprite(this.node.generateTexture())
-    // console.log(parent, this.node)
-    // parent.addChild(this.node)
+  push (localPoint) {
+    this.path.push(localPoint)
+  }
+
+  updateLineByPath () {
+    const setting = this.setting
+    if (!this.path.length) {
+      return
+    }
+    this.clear()
+    this.lineStyle([setting.width, setting.color, setting.alpha, 0.5])
+    this.path.forEach((point, index) => {
+      if (!index) {
+        this.moveTo([point.x, point.y])
+      } else if (this.ctrlPoints.length) {
+        const cp1 = this.ctrlPoints[index - 1].right
+        const cp2 = this.ctrlPoints[index].left
+        this.bezierCurveTo([cp1.x, cp1.y, cp2.x, cp2.y, point.x, point.y])
+      } else {
+        this.lineTo([point.x, point.y])
+      }
+    })
+  }
+
+  simplifyPath () {
+    this.path = simplify(this.path)
+  }
+
+  generateControlPoints () {
+    this.ctrlPoints = genControlPoints(this.path)
   }
 
   hitArea () {
@@ -71,5 +100,32 @@ export default class extends BasicNode {
 
   onclick () {
     // console.log('brush onclick', this.node.hitArea)
+  }
+
+  stringify () {
+    const setting = this.setting
+    let output = `<${this.type}>0x${setting.color.toString(16)};${setting.width.toFixed(2)};${setting.alpha.toFixed(2)};`
+    output += toFixed(this.path[0].x) + '|' + toFixed(this.path[0].y)
+    this.path.reduce((last, point) => {
+      output += `,${toFixed(point.x)}|${toFixed(point.y)}`
+      return point
+    }, this.path[0])
+    return output
+  }
+
+  fromData (data) {
+    const dataParseReg = /(0x[0-9a-z]{6});([0-9.]+);([0-9.]+);([0-9.\-,|]+)$/
+    const [ , color, width, alpha, pointStr ] = data.match(dataParseReg)
+    this.setting.color = parseInt(color, 16)
+    this.setting.width = parseFloat(width)
+    this.setting.alpha = parseFloat(alpha)
+    const points = pointStr.split(',').map(point => {
+      const [ x, y ] = point.split('|')
+      return new Point(parseFloat(x), parseFloat(y))
+    })
+    this.path = points
+    this.generateControlPoints()
+    console.log(this.ctrlPoints, this.path)
+    this.updateLineByPath()
   }
 }
