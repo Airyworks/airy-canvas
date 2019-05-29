@@ -1,6 +1,6 @@
 import { cloneDeep } from 'lodash'
-import AiryCanvas from '@/core/'
-import defaultPlugins from '@/plugins/'
+import AiryCanvas from '../core/'
+import defaultPlugins from '../plugins/'
 
 const defaultOptions = {
   width: 1000,

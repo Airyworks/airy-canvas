@@ -11,4 +11,12 @@ module.exports = {
       .add('./src/example.js')
   },
   css: { extract: false }
+  // configureWebpack:{
+  //   optimization: {
+  //     splitChunks: {
+  //       minSize: 10000,
+  //       maxSize: 500000,
+  //     }
+  //   }
+  // }
 }

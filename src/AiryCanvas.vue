@@ -16,9 +16,9 @@
 
 <script>
 import 'roboto-fontface'
-import '@/assets/common.styl'
-import ToolBar from '@/components/ToolBar'
-import CanvasMixin from '@/mixins/CanvasMixin'
+import './assets/common.styl'
+import ToolBar from './components/ToolBar'
+import CanvasMixin from './mixins/CanvasMixin'
 
 export default {
   name: 'AiryCanvas',
