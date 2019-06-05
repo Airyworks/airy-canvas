@@ -165,7 +165,6 @@ class Transform {
     e.stopPropagation()
     this.drag = true
     this.dragStart = new MouseEvent(e, this.airy.app.stage)
-    console.log(this.component)
     this.dragStartLocal = this.component.getLocalPosition()
     this.dragStartGlobal = this.component.getGlobalPosition()
   }

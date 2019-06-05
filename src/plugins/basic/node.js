@@ -61,7 +61,10 @@ class BasicNode {
     return new Point(this.node.position.x, this.node.position.y)
   }
   getGlobalPosition () {
-    const { x, y } = this.node.hitArea || this.node
+    let { x, y } = this.node.hitArea || { x: 0, y: 0 }
+    const { x: xPos, y: yPos } = this.node.position
+    x += xPos
+    y += yPos
     const stage = this.airy.app.stage
     return new Point(
       (x - stage.pivot.x) * stage.scale.x + stage.position.x,
