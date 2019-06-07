@@ -76,7 +76,11 @@ class BasicNode {
     return ''
   }
 
-  fromData () {}
+  getData () {
+    return {}
+  }
+
+  fromData (data) {}
 }
 
 export default BasicNode

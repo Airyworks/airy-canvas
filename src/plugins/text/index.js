@@ -48,6 +48,7 @@ export default class extends Basic {
     const text = new Node({ airy, stage }, this.setting)
     store.addNode(text)
     store.action(text, 'position', local)
+    store.commit(text.uuid)
     airy.store.focus(text.uuid)
     return true
   }

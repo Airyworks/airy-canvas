@@ -70,7 +70,7 @@ class Store {
   commit (uuid) {
     const node = this.findByUuid(uuid)
     if (node) {
-      console.log(node, node.stringify())
+      console.log(node.getData(), node)
     }
   }
 
@@ -81,7 +81,29 @@ class Store {
   }
 
   createNode (data) {
-    console.log(data)
+    const { airy, stage } = this
+    const pluginName = data.plugin
+    const plugin = this.airy.plugins.find(i => i.name === pluginName)
+    if (plugin) {
+      const node = new plugin.Node({ airy, stage }, plugin.setting)
+      node.fromData(data.data)
+      const parent = this.findByUuid(data.parent)
+      if (parent) {
+        parent.addChild(node)
+        node.mountNode()
+        this[uuidDictSymbol][node.uuid] = node
+        this[uuidDictSymbol][node.id] = node
+      } else {
+        // error, parent nou found
+        throw Error(`parent ${data.parent} not found`)
+      }
+    } else {
+      // error, plugin not found
+      throw Error(`plugin ${pluginName} not found`)
+    }
+  }
+
+  createNodeOld (data) {
     const { airy, stage } = this
     const reg = /^<([0-9a-zA-Z-]*)>/
     const pluginPrefix = data.data.match(reg)
@@ -95,7 +117,9 @@ class Store {
         const parent = this.findByUuid(data.parent)
         if (parent) {
           parent.addChild(node)
-          console.log(parent)
+          node.mountNode()
+          this[uuidDictSymbol][node.uuid] = node
+          this[uuidDictSymbol][node.id] = node
         } else {
           // error, parent nou found
           throw Error(`parent ${data.parent} not found`)

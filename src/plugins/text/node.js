@@ -95,4 +95,16 @@ export default class extends BasicNode {
   changeEvent (e) {
     this.transform.resize(this.editor.offsetWidth + 8, this.editor.offsetHeight + 4)
   }
+
+  stringify () {
+    console.log(this.setting)
+    // const setting = this.setting
+    // let output = `<${this.type}>0x${setting.color.toString(16)};${setting.width.toFixed(2)};${setting.alpha.toFixed(2)};`
+    // output += toFixed(this.path[0].x) + '|' + toFixed(this.path[0].y)
+    // this.path.reduce((last, point) => {
+    //   output += `,${toFixed(point.x)}|${toFixed(point.y)}`
+    //   return point
+    // }, this.path[0])
+    return 'text component'
+  }
 }

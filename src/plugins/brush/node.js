@@ -113,7 +113,20 @@ export default class extends BasicNode {
     return output
   }
 
+  getData () {
+    console.log(this.setting, this.path)
+  }
+
   fromData (data) {
+    Object.assign(this.setting, data.setting || {})
+    this.path = data.path.map(point => {
+      return new Point(point.x, point.y)
+    })
+    this.generateControlPoints()
+    this.updateLineByPath()
+  }
+
+  fromDataOld (data) {
     const dataParseReg = /(0x[0-9a-z]{6});([0-9.]+);([0-9.]+);([0-9.\-,|]+)$/
     const [ , color, width, alpha, pointStr ] = data.match(dataParseReg)
     this.setting.color = parseInt(color, 16)
@@ -125,7 +138,6 @@ export default class extends BasicNode {
     })
     this.path = points
     this.generateControlPoints()
-    console.log(this.ctrlPoints, this.path)
     this.updateLineByPath()
   }
 }

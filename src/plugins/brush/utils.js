@@ -93,7 +93,6 @@ export const genControlPoints = points => {
     const prevP = points[prev]
     return distance(p, prevP)
   })
-  console.log(dis)
   let p1 = points[0]
   const controlPoints = points.map((p, i, points) => {
     let next = i + 1
