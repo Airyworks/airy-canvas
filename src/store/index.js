@@ -73,7 +73,9 @@ class Store {
       const nodeData = {
         uuid: node.uuid,
         ts: node.ts,
-        data: node.getData()
+        data: node.getData(),
+        plugin: node.type,
+        parent: node.parent.uuid
       }
       this.airy.component.$emit('commit', nodeData)
     }
@@ -82,6 +84,13 @@ class Store {
   renderHistory (history) {
     for (const item of history) {
       this.createNode(item)
+    }
+  }
+
+  updateHistory (history) {
+    // compare and update, todo...
+    for (const node of history) {
+      this.updateNode(node)
     }
   }
 
@@ -113,7 +122,14 @@ class Store {
   }
 
   updateNode (data) {
-    // const node = this.findByUuid(data.uuid)
+    const node = this.findByUuid(data.uuid)
+    if (node) {
+      // update
+      node.updateData(data.data)
+    } else {
+      this.createNode(data)
+    }
+    this.airy.needUpdate = true
   }
 
   createNodeOld (data) {

@@ -152,16 +152,17 @@ export default class {
     }
   }
 
-  updateNode (element) {
-    if (this.store.findByUuid(element.uuid)) {
-      this.store.updateNode(element)
-    } else {
-      this.store.createNode(element)
-    }
+  updateNode (node) {
+    this.store.updateNode(node)
   }
 
   renderHistory () {
     this.store.renderHistory(this.history)
+  }
+
+  updateHistory (val) {
+    this.history = val
+    this.store.updateHistory(this.history)
   }
 
   initEventListener () {

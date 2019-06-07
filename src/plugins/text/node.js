@@ -112,4 +112,14 @@ export default class extends BasicNode {
       position: this.getLocalPosition()
     }
   }
+
+  fromData (data) {
+    Object.assign(this.setting, data.setting || {})
+    this.text = data.text
+    this.position(data.position)
+  }
+
+  updateData (data) {
+    this.fromData(data)
+  }
 }

@@ -129,6 +129,10 @@ export default class extends BasicNode {
     this.updateLineByPath()
   }
 
+  updateData (data) {
+    this.fromData(data)
+  }
+
   fromDataOld (data) {
     const dataParseReg = /(0x[0-9a-z]{6});([0-9.]+);([0-9.]+);([0-9.\-,|]+)$/
     const [ , color, width, alpha, pointStr ] = data.match(dataParseReg)

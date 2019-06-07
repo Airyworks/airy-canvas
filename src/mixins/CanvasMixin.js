@@ -47,6 +47,11 @@ export default {
       active: undefined
     }
   },
+  watch: {
+    data: function (val) {
+      this.airyCanvas.updateHistory(cloneDeep(val))
+    }
+  },
   created () {
     this.plugins = defaultPlugins.concat(this._options.plugins).map(Plugin => new Plugin())
   },

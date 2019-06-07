@@ -84,6 +84,8 @@ class BasicNode {
 
   fromData (data) {}
 
+  updateData (data) {}
+
   commit () {
     if (this.store) {
       this.store.commit(this.uuid)
