@@ -3,6 +3,7 @@
     <airy-canvas
       :data="airyCanvasData"
       :options="airyCanvasOptions"
+      @commit="commit"
     />
   </div>
 </template>
@@ -22,6 +23,11 @@ export default {
       airyCanvasOptions: {
         fluid: true
       }
+    }
+  },
+  methods: {
+    commit (element) {
+      console.log('commit event', element)
     }
   }
 }

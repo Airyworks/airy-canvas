@@ -53,7 +53,7 @@ export default {
   mounted () {
     this.box = this.$refs['airy-box']
     this.airyCanvas = new AiryCanvas(this, this.box, this._options, this.plugins, cloneDeep(this.data))
-    window.airyCanvas = this.airyCanvas
+    // window.airyCanvas = this.airyCanvas
     this.active = 'basic-move'
     this.activePlugin(this.active)
 
@@ -84,6 +84,9 @@ export default {
     updateConfig (name, cfg) {
       const plugin = this.plugins.find(p => p.name === name)
       plugin.updateSetting(cfg)
+    },
+    updateNode (element) {
+      this.airyCanvas.updateNode(element)
     }
   }
 }

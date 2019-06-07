@@ -4,8 +4,8 @@ import MultiStyleText from 'pixi-multistyle-text'
 import cfg from './airy.plugin'
 
 export default class extends BasicNode {
-  constructor ({ airy, stage }, setting) {
-    super(airy)
+  constructor ({ airy, stage }, setting, meta) {
+    super(airy, meta)
     this.type = cfg.name
     this.airy = airy
     this.stage = stage
@@ -31,6 +31,14 @@ export default class extends BasicNode {
     this.listener = {
       changeEvent: this.changeEvent.bind(this)
     }
+  }
+
+  get text () {
+    return this.node.text
+  }
+
+  set text (d) {
+    this.node.text = d
   }
 
   position (local) {
@@ -90,21 +98,18 @@ export default class extends BasicNode {
     this.node.text = text
     this.node.renderable = true
     this.editor.removeEventListener('input', this.listener.changeEvent)
+    this.commit()
   }
 
   changeEvent (e) {
     this.transform.resize(this.editor.offsetWidth + 8, this.editor.offsetHeight + 4)
   }
 
-  stringify () {
-    console.log(this.setting)
-    // const setting = this.setting
-    // let output = `<${this.type}>0x${setting.color.toString(16)};${setting.width.toFixed(2)};${setting.alpha.toFixed(2)};`
-    // output += toFixed(this.path[0].x) + '|' + toFixed(this.path[0].y)
-    // this.path.reduce((last, point) => {
-    //   output += `,${toFixed(point.x)}|${toFixed(point.y)}`
-    //   return point
-    // }, this.path[0])
-    return 'text component'
+  getData () {
+    return {
+      setting: this.setting,
+      text: this.text,
+      position: this.getLocalPosition()
+    }
   }
 }

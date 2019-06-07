@@ -70,7 +70,12 @@ class Store {
   commit (uuid) {
     const node = this.findByUuid(uuid)
     if (node) {
-      console.log(node.getData(), node)
+      const nodeData = {
+        uuid: node.uuid,
+        ts: node.ts,
+        data: node.getData()
+      }
+      this.airy.component.$emit('commit', nodeData)
     }
   }
 
@@ -85,7 +90,11 @@ class Store {
     const pluginName = data.plugin
     const plugin = this.airy.plugins.find(i => i.name === pluginName)
     if (plugin) {
-      const node = new plugin.Node({ airy, stage }, plugin.setting)
+      const meta = {
+        uuid: data.uuid,
+        ts: data.ts
+      }
+      const node = new plugin.Node({ airy, stage }, plugin.setting, meta)
       node.fromData(data.data)
       const parent = this.findByUuid(data.parent)
       if (parent) {
@@ -101,6 +110,10 @@ class Store {
       // error, plugin not found
       throw Error(`plugin ${pluginName} not found`)
     }
+  }
+
+  updateNode (data) {
+    // const node = this.findByUuid(data.uuid)
   }
 
   createNodeOld (data) {

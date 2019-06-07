@@ -6,8 +6,8 @@ import { toFixed } from '@/utils/number'
 import { simplify, genControlPoints } from './utils'
 
 export default class extends BasicNode {
-  constructor ({ airy }, setting) {
-    super(airy)
+  constructor ({ airy }, setting, meta) {
+    super(airy, meta)
     this.type = cfg.name
     this.setting = cloneDeep(setting)
     this.node = new Graphics()
@@ -114,7 +114,10 @@ export default class extends BasicNode {
   }
 
   getData () {
-    console.log(this.setting, this.path)
+    return {
+      setting: this.setting,
+      path: this.path
+    }
   }
 
   fromData (data) {

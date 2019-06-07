@@ -3,10 +3,12 @@ import { Point } from 'pixi.js'
 import Transform from './transform-dom'
 
 class BasicNode {
-  constructor (airy) {
+  constructor (airy, meta) {
     this.airy = airy
-    this.uuid = uuidv1()
+    this.store = airy.store
+    this.uuid = meta ? meta.uuid : uuidv1()
     this.id = this.uuid
+    this.ts = meta ? meta.ts : new Date().getTime()
     this.type = undefined
     this.parent = undefined
     this.$focus = false
@@ -81,6 +83,12 @@ class BasicNode {
   }
 
   fromData (data) {}
+
+  commit () {
+    if (this.store) {
+      this.store.commit(this.uuid)
+    }
+  }
 }
 
 export default BasicNode

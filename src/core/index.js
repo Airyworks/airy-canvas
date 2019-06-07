@@ -35,7 +35,7 @@ export default class {
     this.fluid = fluid
     this.plugins = plugins
     this[activePluginSymbol] = plugins[0]
-    this.history = history
+    this.history = history || []
     if (fluid) {
       this.app = new PIXI.Application(withPIXIDefaultOptions({
         autoResize: true,
@@ -149,6 +149,14 @@ export default class {
           viewport: this.viewport
         }, item)
       }
+    }
+  }
+
+  updateNode (element) {
+    if (this.store.findByUuid(element.uuid)) {
+      this.store.updateNode(element)
+    } else {
+      this.store.createNode(element)
     }
   }
 

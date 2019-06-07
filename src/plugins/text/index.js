@@ -45,7 +45,7 @@ export default class extends Basic {
   }
 
   beginWithMouse ({ airy, stage, store }, { local }) {
-    const text = new Node({ airy, stage }, this.setting)
+    const text = new Node({ airy, stage, store }, this.setting)
     store.addNode(text)
     store.action(text, 'position', local)
     store.commit(text.uuid)

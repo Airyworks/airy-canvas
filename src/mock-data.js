@@ -3,6 +3,7 @@ export default [
   {
     ts: 1555784279327,
     parent: 'root',
+    uuid: 'e79d5220-88c6-11e9-b09d-3db5bb96f770',
     plugin: 'basic-brush',
     data: {
       setting: {
