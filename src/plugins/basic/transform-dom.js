@@ -162,11 +162,14 @@ class Transform {
   }
 
   boxMouseDown (e) {
-    e.stopPropagation()
+    if (e.stopPropagation) {
+      e.stopPropagation()
+    }
     this.drag = true
     this.dragStart = new MouseEvent(e, this.airy.app.stage)
     this.dragStartLocal = this.component.getLocalPosition()
     this.dragStartGlobal = this.component.getGlobalPosition()
+    console.log(this.dragStart)
   }
 
   boxMouseMove (e) {

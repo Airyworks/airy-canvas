@@ -13,6 +13,11 @@ class BasicNode {
     this.parent = undefined
     this.$focus = false
     this.transform = new Transform(airy, this)
+    this.moveInClick = 0
+    this.listener = {
+      moveEvent: this.moveEvent.bind(this),
+      upEvent: this.upEvent.bind(this)
+    }
   }
 
   get focus () {
@@ -44,10 +49,30 @@ class BasicNode {
 
   clickEvent (e) {
     e.stopPropagation()
-    console.log('node pointdown', this.type, this.uuid)
-    this.airy.store.focus(this.uuid)
+    if (this.airy.activePlugin.name === 'basic-select') {
+      this.moveInClick = 0
+      this.transform.boxMouseDown(e.data)
+      window.addEventListener('mousemove', this.listener.moveEvent)
+      window.addEventListener('mouseup', this.listener.upEvent)
+    }
     // this.airy.store.focus()
     this.focusEvent(e)
+  }
+
+  moveEvent (e) {
+    e.stopPropagation()
+    this.moveInClick++
+    this.transform.boxMouseMove(e)
+  }
+
+  upEvent (e) {
+    e.stopPropagation()
+    this.transform.boxMouseUp(e)
+    window.removeEventListener('mousemove', this.listener.moveEvent)
+    window.removeEventListener('mouseup', this.listener.upEvent)
+    if (this.moveInClick <= 1) {
+      this.airy.store.focus(this.uuid)
+    }
   }
 
   unfocus () {}

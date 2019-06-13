@@ -218,6 +218,8 @@ export default class {
       const needUpdate = plugin.moveWithMouse(this.args, new MouseEvent(e, this.app.stage))
       this.needUpdate = this.needUpdate || needUpdate
     }
+    // const needUpdate = plugin.moveWithMouse(this.args, new MouseEvent(e, this.app.stage))
+    // this.needUpdate = this.needUpdate || needUpdate
   }
 
   mouseup (e) {
@@ -228,9 +230,10 @@ export default class {
     }
     this.pointerDownSwitch = false
     if (plugin.name !== 'basic-select') {
+      this.store.unfocus()
       const needUpdate = plugin.endWithMouse(this.args, new MouseEvent(e, this.app.stage))
       this.needUpdate = this.needUpdate || needUpdate
-      this.switchPlugin('basic-select')
+      // this.switchPlugin('basic-select')
     }
   }
 

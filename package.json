@@ -1,14 +1,13 @@
 {
   "name": "airy-canvas",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": false,
   "description": "The realization of a front-end drawing board.",
   "scripts": {
     "serve": "vue-cli-service serve --mode development",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "dist": "vue-cli-service build --target wc --name airy-canvas ./src/AiryCanvas.vue",
-    "dist:webpack": "rm -rf ./dist && webpack --config webpack.config.js"
+    "dist": "rm -rf ./dist && webpack --config webpack.config.js"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.17",

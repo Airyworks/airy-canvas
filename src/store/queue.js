@@ -13,6 +13,7 @@ class StoreQueue {
   }
 
   process () {
+    console.log(this.queue.map(i => i))
     if (this.queue.length === 0) return false
     let finalState = ['unfocus']
     const history = []

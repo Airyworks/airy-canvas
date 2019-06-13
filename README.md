@@ -2,6 +2,10 @@
 
 Powerful front-end interactive drawing board.
 
+## Quick start
+
+Try [Airy Canvas mini](https://github.com/Airyworks/airy-canvas), a mini demo with backend.
+
 ## Features
 - infinite canvas
 - toolbox plugins
