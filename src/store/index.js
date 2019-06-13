@@ -70,15 +70,26 @@ class Store {
   commit (uuid) {
     const node = this.findByUuid(uuid)
     if (node) {
-      const nodeData = {
-        uuid: node.uuid,
-        ts: node.ts,
-        data: node.getData(),
-        plugin: node.type,
-        parent: node.parent.uuid
-      }
+      const nodeData = node.getInfo()
       this.airy.component.$emit('commit', nodeData)
+      this.getHistory()
     }
+  }
+
+  getHistory () {
+    const history = []
+    function recursiveNode (node) {
+      if (node.type !== 'basic-root') {
+        history.push(node.getInfo())
+      }
+      if (node.children) {
+        for (const child of node.children) {
+          recursiveNode(child)
+        }
+      }
+    }
+    recursiveNode(this.root)
+    return history
   }
 
   renderHistory (history) {

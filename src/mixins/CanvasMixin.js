@@ -92,6 +92,9 @@ export default {
     },
     updateNode (element) {
       this.airyCanvas.updateNode(element)
+    },
+    getHistory () {
+      return this.airyCanvas.store.getHistory()
     }
   }
 }

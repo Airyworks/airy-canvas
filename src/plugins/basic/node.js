@@ -103,6 +103,16 @@ class BasicNode {
     return ''
   }
 
+  getInfo () {
+    return {
+      uuid: this.uuid,
+      ts: this.ts,
+      data: this.getData(),
+      plugin: this.type,
+      parent: this.parent.uuid
+    }
+  }
+
   getData () {
     return {}
   }
