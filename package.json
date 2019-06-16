@@ -1,6 +1,6 @@
 {
   "name": "airy-canvas",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "private": false,
   "description": "The realization of a front-end drawing board.",
   "scripts": {

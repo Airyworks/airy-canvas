@@ -1,10 +1,15 @@
 <template>
   <div id="app">
     <airy-canvas
+      ref="canvas"
       :data="airyCanvasData"
       :options="airyCanvasOptions"
       @commit="commit"
     />
+    <div class="option-btn-group">
+      <button class="clear-btn" @click="clear">clear</button>
+      <button class="history-btn" @click="getHistory">getHistory</button>
+    </div>
   </div>
 </template>
 
@@ -28,6 +33,12 @@ export default {
   methods: {
     commit (element) {
       console.log('commit event', element)
+    },
+    clear () {
+      this.$refs['canvas'].clear()
+    },
+    getHistory () {
+      console.log(this.$refs['canvas'].getHistory())
     }
   }
 }
@@ -44,4 +55,8 @@ body
   #app
     height 100%
     width 100%
+  .option-btn-group
+    position fixed
+    top: 20px
+    right: 30px
 </style>

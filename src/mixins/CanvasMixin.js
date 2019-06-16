@@ -95,6 +95,9 @@ export default {
     },
     getHistory () {
       return this.airyCanvas.store.getHistory()
+    },
+    clear () {
+      this.airyCanvas.store.clear()
     }
   }
 }

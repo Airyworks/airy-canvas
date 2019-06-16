@@ -50,6 +50,25 @@ class Store {
     }
   }
 
+  clear () {
+    function removeRecursiveNode (node) {
+      if (node.children) {
+        // remove child first
+        for (const child of node.children) {
+          removeRecursiveNode(child)
+        }
+      }
+      // clear children
+      node.children = []
+      if (node.type !== 'basic-root') {
+        // remove self, do not remove root node
+        node.parent.node.removeChild(node.node)
+      }
+    }
+    removeRecursiveNode(this.root)
+    this.airy.needUpdate = true
+  }
+
   showFocus () {
     this.queue.process()
     // if (this.focusNode) {

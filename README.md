@@ -53,6 +53,13 @@ export default {
 | plugins  | plugins array | array | - | [] |
 | store  | vuex integration options | object | - | undefined |
 
+## Methods
+
+| Name  | Arguments | Return |
+| - | - | - |
+| clear  | - | - |
+| getHistory  | - | Array of history data |
+
 ## Plugins (Not finished)
 Want more tools in Airy Canvas? Airy Canvas accept plugins.
 
