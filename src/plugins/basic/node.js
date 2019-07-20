@@ -1,6 +1,7 @@
 import uuidv1 from 'uuid/v1'
 import { Point } from 'pixi.js'
 import Transform from './transform-dom'
+import Submenu from './submenu'
 
 class BasicNode {
   constructor (airy, meta) {
@@ -12,6 +13,7 @@ class BasicNode {
     this.type = undefined
     this.parent = undefined
     this.$focus = false
+    this.submenu = new Submenu(airy, this)
     this.transform = new Transform(airy, this)
     this.moveInClick = 0
     this.listener = {
@@ -125,6 +127,10 @@ class BasicNode {
     if (this.store) {
       this.store.commit(this.uuid)
     }
+  }
+
+  onRemoved () {
+    this.focus = false
   }
 }
 

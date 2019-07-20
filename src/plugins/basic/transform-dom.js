@@ -34,12 +34,65 @@ class Transform {
     for (const point of this.points) {
       this.box.appendChild(point)
     }
+
+    this.bar = null
+  }
+
+  getBar () {
+    const domContainer = document.createElement('div')
+    const barBox = document.createElement('div')
+    domContainer.appendChild(barBox)
+    const style = {
+      '@keyframes barShowup': {
+        from: {
+          opacity: 0,
+          transform: 'translateY(50%)'
+        },
+        to: {
+          opacity: 1,
+          transform: 'translateY(0)'
+        }
+      },
+      barContainer: {
+        position: 'absolute',
+        left: `50%`,
+        top: `-50px`,
+        boxSizing: 'border-box',
+        cursor: 'move',
+        padding: `${this.padding.y}px ${this.padding.x}px`,
+        animationName: '$barShowup',
+        animationDuration: '0.5s'
+      },
+      barBox: {
+        position: 'absolute',
+        left: 0,
+        top: 0,
+        background: '#fff',
+        transform: 'translateX(-50%)',
+        padding: '5px',
+        boxShadow: '0 8px 16px 0 rgba(0,0,0,0.12)'
+      },
+      ...this.component.submenu.getStyles()
+    }
+    barBox.appendChild(this.component.submenu.getContent())
+    this.bar = {
+      dom: domContainer,
+      barBox: barBox,
+      style
+    }
+    this.box.appendChild(this.bar.dom)
+  }
+
+  getContentActions () {
+    const actions = document.createElement('div')
+    return actions
   }
 
   show () {
     const node = this.component.node
     if (node && !this.status) {
       this.status = true
+      this.getBar()
       this.drawBox(node)
       this.render()
       this.airy.needUpdate = true
@@ -55,9 +108,6 @@ class Transform {
         this.sheet.detach()
       }
     }
-  }
-
-  initBox () {
   }
 
   drawBox (node) {
@@ -124,7 +174,8 @@ class Transform {
         right: 0,
         bottom: 0,
         transform: `translate(50%, 50%)`
-      }
+      },
+      ...this.bar.style
     }
 
     this.sheet = this.airy.jss.createStyleSheet(styles)
@@ -141,6 +192,9 @@ class Transform {
     this.lb.classList = `${classes.points} ${classes.lb}`
     this.b.classList = `${classes.points} ${classes.b}`
     this.rb.classList = `${classes.points} ${classes.rb}`
+    this.bar.dom.className = classes.barContainer
+    this.bar.barBox.className = classes.barBox
+    this.component.submenu.mountStyle(this.sheet)
   }
 
   render () {

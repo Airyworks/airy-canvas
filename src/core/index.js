@@ -2,7 +2,9 @@ import * as PIXI from 'pixi.js'
 import compose from 'koa-compose'
 import FPS from 'yy-fps'
 import jss from 'jss'
-import camelCase from 'jss-plugin-camel-case'
+import jssPresetDefault from 'jss-preset-default'
+import jssCamelCase from 'jss-plugin-camel-case'
+import jssNetsed from 'jss-plugin-nested'
 import Store from '@/store'
 import Zoom from './zoom'
 import Logger from './logger'
@@ -13,7 +15,9 @@ import {
   needUpdateSymbol
 } from './symbols'
 
-jss.use(camelCase())
+jss.use(jssPresetDefault())
+jss.use(jssCamelCase())
+jss.use(jssNetsed())
 
 const logger = new Logger('core')
 // window.PIXI = undefined

@@ -1,9 +1,10 @@
 import { cloneDeep } from 'lodash'
 import { Graphics, Point, Rectangle } from 'pixi.js'
-import BasicNode from '@/plugins/basic/node'
-import cfg from './airy.plugin'
 import { toFixed } from '@/utils/number'
 import { simplify, genControlPoints } from './utils'
+import BasicNode from '@/plugins/basic/node'
+import Submenu from './submenu'
+import cfg from './airy.plugin'
 
 export default class extends BasicNode {
   constructor ({ airy }, setting, meta) {
@@ -20,6 +21,7 @@ export default class extends BasicNode {
     }
     this.path = []
     this.ctrlPoints = []
+    this.submenu = new Submenu(airy, this)
   }
 
   clear () {
@@ -127,24 +129,22 @@ export default class extends BasicNode {
     })
     this.generateControlPoints()
     this.updateLineByPath()
+    this.airy.needUpdate = true
   }
 
   updateData (data) {
     this.fromData(data)
   }
 
-  fromDataOld (data) {
-    const dataParseReg = /(0x[0-9a-z]{6});([0-9.]+);([0-9.]+);([0-9.\-,|]+)$/
-    const [ , color, width, alpha, pointStr ] = data.match(dataParseReg)
-    this.setting.color = parseInt(color, 16)
-    this.setting.width = parseFloat(width)
-    this.setting.alpha = parseFloat(alpha)
-    const points = pointStr.split(',').map(point => {
-      const [ x, y ] = point.split('|')
-      return new Point(parseFloat(x), parseFloat(y))
-    })
-    this.path = points
-    this.generateControlPoints()
-    this.updateLineByPath()
+  commit () {
+    const d = this.getData()
+    this.updateData(d)
   }
+
+  // update (d) {
+  //   this.path = d.path
+  //   Object.assign(this.setting, d.setting)
+  //   this.updateLineByPath()
+  //   this.airy.needUpdate = true
+  // }
 }
